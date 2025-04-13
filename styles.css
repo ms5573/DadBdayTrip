@@ -226,12 +226,63 @@ section {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: var(--space-lg);
     margin-bottom: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
 }
 
 .day-card h3 {
     border-bottom: 2px solid var(--aka);
     padding-bottom: var(--space-sm);
     margin-top: 0;
+    margin-bottom: var(--space-sm);
+}
+
+.day-card h4 {
+    margin-top: 0;
+    margin-bottom: var(--space-md);
+    color: var(--akane);
+}
+
+/* Day Images Styling */
+.day-image {
+    margin-bottom: var(--space-lg);
+    max-width: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.day-image img {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Day Highlights Styling */
+.day-highlights {
+    background-color: var(--light-gray);
+    border-radius: 5px;
+    padding: var(--space-md);
+    margin: var(--space-md) 0;
+    border-left: 4px solid var(--aka);
+}
+
+.day-highlights h5 {
+    margin-top: 0;
+    color: var(--akane);
+    margin-bottom: var(--space-sm);
+}
+
+.day-highlights ul {
+    margin-left: var(--space-lg);
+    padding-left: 0;
+}
+
+.day-highlights li {
+    margin-bottom: var(--space-xs);
 }
 
 .activity {
@@ -307,34 +358,33 @@ section {
     border-left: 4px solid var(--aka);
 }
 
-/* Collapsible elements */
+/* Collapsible sections */
 .collapsible-trigger {
     background-color: var(--light-gray);
     color: var(--kuro);
-    cursor: pointer;
-    padding: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
     width: 100%;
-    border: none;
     text-align: left;
-    outline: none;
-    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
     font-weight: 500;
-    transition: 0.4s;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: var(--space-sm);
     margin-bottom: var(--space-sm);
 }
 
-.collapsible-trigger:after {
-    content: '+';
-    font-size: 1.5rem;
-    color: var(--akane);
+.collapsible-trigger::after {
+    content: "+";
+    position: absolute;
+    right: var(--space-md);
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
-.collapsible-trigger.active:after {
-    content: '-';
+.collapsible-trigger.active::after {
+    content: "−";
 }
 
 .collapsible-trigger:hover {
@@ -342,11 +392,13 @@ section {
 }
 
 .collapsible-content {
+    display: none;
     padding: var(--space-md);
-    background-color: white;
-    border-radius: 0 0 5px 5px;
+    background-color: var(--gofun);
+    border-radius: 4px;
+    margin-top: var(--space-sm);
     margin-bottom: var(--space-md);
-    display: none; /* Initially hidden */
+    border-left: 2px solid var(--medium-gray);
 }
 
 /* Footer */
