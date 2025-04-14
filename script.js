@@ -88,12 +88,18 @@ function setupMobileNav() {
     let touchStartY = 0;
     let touchStartTime = 0;
 
-    document.addEventListener('touchstart', (e) => {
+    document.addEventListener('touchstart', function(e) {
+        // Skip if the touch is within the map container
+        if (e.target.closest('#japan-trip-map')) return;
+        
         touchStartY = e.touches[0].clientY;
         touchStartTime = Date.now();
-    });
+    }, false);
 
-    document.addEventListener('touchend', (e) => {
+    document.addEventListener('touchend', function(e) {
+        // Skip if the touch is within the map container
+        if (e.target.closest('#japan-trip-map')) return;
+        
         const touchEndY = e.changedTouches[0].clientY;
         const touchEndTime = Date.now();
         const distance = touchEndY - touchStartY;
@@ -433,6 +439,12 @@ function setupDaySelectors() {
     const dayButtons = document.querySelectorAll('.day-buttons button');
     const dayCards = document.querySelectorAll('.day-card');
     
+    // Create mobile-specific navigation for itinerary
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+        createMobileItineraryNav(dayButtons, dayCards);
+    }
+    
     // Set first day as active, hide others
     if (dayCards.length > 0 && dayButtons.length > 0) {
         dayCards.forEach((card, index) => {
@@ -477,20 +489,10 @@ function setupDaySelectors() {
                     behavior: 'smooth'
                 });
                 
-                // Update URL hash without scrolling
-                const dayIndicator = document.querySelector('.day-indicator');
-                if (dayIndicator) {
-                    dayIndicator.textContent = `Day ${dayNumber}`;
-                    dayIndicator.style.display = 'block';
-                    
-                    // Hide day indicator after a few seconds
-                    setTimeout(() => {
-                        dayIndicator.style.opacity = '0';
-                        setTimeout(() => {
-                            dayIndicator.style.opacity = '1';
-                            dayIndicator.style.display = 'none';
-                        }, 300);
-                    }, 2000);
+                // Update mobile day selector if it exists
+                const mobileDaySelector = document.getElementById('mobile-day-selector');
+                if (mobileDaySelector) {
+                    mobileDaySelector.value = dayNumber;
                 }
             }
         });
@@ -502,10 +504,16 @@ function setupDaySelectors() {
     const swipeThreshold = 80; // Minimum swipe distance in pixels
     
     document.addEventListener('touchstart', function(e) {
+        // Skip if the touch is within the map container
+        if (e.target.closest('#japan-trip-map')) return;
+        
         touchStartX = e.changedTouches[0].screenX;
     }, false);
     
     document.addEventListener('touchend', function(e) {
+        // Skip if the touch is within the map container
+        if (e.target.closest('#japan-trip-map')) return;
+        
         touchEndX = e.changedTouches[0].screenX;
         handleSwipe();
     }, false);
@@ -559,12 +567,142 @@ function setupDaySelectors() {
         }
     }
     
-    // Center active day button when page loads
-    const activeButton = document.querySelector('.day-buttons button.active');
-    if (activeButton) {
-        const dayNumber = activeButton.getAttribute('data-day');
-        scrollDayButtonIntoView(dayNumber);
+    // Center active day button when page loads (desktop only)
+    if (!isMobile) {
+        const activeButton = document.querySelector('.day-buttons button.active');
+        if (activeButton) {
+            const dayNumber = activeButton.getAttribute('data-day');
+            scrollDayButtonIntoView(dayNumber);
+        }
     }
+    
+    // Modify the createMobileItineraryNav function to improve the layout
+    function createMobileItineraryNav(dayButtons, dayCards) {
+        // Hide the original day buttons on mobile
+        const dayButtonsContainer = document.querySelector('.day-buttons');
+        if (dayButtonsContainer) {
+            dayButtonsContainer.classList.add('desktop-only');
+        }
+        
+        // Create mobile navigation container
+        const mobileNavContainer = document.createElement('div');
+        mobileNavContainer.className = 'mobile-itinerary-nav';
+        
+        // Create day dropdown
+        const daySelector = document.createElement('select');
+        daySelector.id = 'mobile-day-selector';
+        
+        // Create prev/next buttons
+        const prevButton = document.createElement('button');
+        prevButton.className = 'mobile-nav-btn prev-day';
+        prevButton.innerHTML = '&larr;';
+        prevButton.setAttribute('aria-label', 'Previous Day');
+        
+        const nextButton = document.createElement('button');
+        nextButton.className = 'mobile-nav-btn next-day';
+        nextButton.innerHTML = '&rarr;';
+        nextButton.setAttribute('aria-label', 'Next Day');
+        
+        // Add options to day selector
+        dayButtons.forEach(button => {
+            const dayNum = button.getAttribute('data-day');
+            const option = document.createElement('option');
+            option.value = dayNum;
+            option.textContent = `Day ${dayNum}`;
+            daySelector.appendChild(option);
+        });
+        
+        // Add event listener to day selector
+        daySelector.addEventListener('change', function() {
+            const selectedDay = this.value;
+            const dayButton = document.querySelector(`.day-buttons button[data-day="${selectedDay}"]`);
+            if (dayButton) {
+                dayButton.click();
+            }
+        });
+        
+        // Add event listeners to prev/next buttons
+        prevButton.addEventListener('click', function() {
+            const currentDay = document.querySelector('.day-buttons button.active');
+            if (!currentDay) return;
+            
+            const dayNumber = parseInt(currentDay.getAttribute('data-day'));
+            if (dayNumber > 1) {
+                const prevButton = document.querySelector(`.day-buttons button[data-day="${dayNumber - 1}"]`);
+                if (prevButton) prevButton.click();
+            }
+        });
+        
+        nextButton.addEventListener('click', function() {
+            const currentDay = document.querySelector('.day-buttons button.active');
+            if (!currentDay) return;
+            
+            const dayNumber = parseInt(currentDay.getAttribute('data-day'));
+            if (dayNumber < dayButtons.length) {
+                const nextButton = document.querySelector(`.day-buttons button[data-day="${dayNumber + 1}"]`);
+                if (nextButton) nextButton.click();
+            }
+        });
+        
+        // Create a navigation row for buttons and selector
+        const navRow = document.createElement('div');
+        navRow.className = 'mobile-nav-row';
+        
+        // Add elements to container - no label to save space on mobile
+        navRow.appendChild(prevButton);
+        navRow.appendChild(daySelector);
+        navRow.appendChild(nextButton);
+        mobileNavContainer.appendChild(navRow);
+        
+        // Add current day info display
+        const currentDayInfo = document.createElement('div');
+        currentDayInfo.className = 'current-day-info';
+        currentDayInfo.textContent = 'Day 1';
+        mobileNavContainer.appendChild(currentDayInfo);
+        
+        // Insert mobile nav before the first day card
+        const firstDayCard = document.querySelector('.day-card[data-day="1"]');
+        if (firstDayCard && firstDayCard.parentNode) {
+            firstDayCard.parentNode.insertBefore(mobileNavContainer, firstDayCard);
+        }
+        
+        // Update current day info when changing days
+        function updateCurrentDayInfo(dayNumber) {
+            const dayCard = document.querySelector(`.day-card[data-day="${dayNumber}"]`);
+            if (dayCard && currentDayInfo) {
+                const dayTitle = dayCard.querySelector('h3').textContent;
+                const daySubtitle = dayCard.querySelector('h4').textContent;
+                currentDayInfo.innerHTML = `<strong>${dayTitle}</strong><span>${daySubtitle}</span>`;
+            }
+        }
+        
+        // Initialize with day 1
+        updateCurrentDayInfo(1);
+        
+        // Update current day info when day changes
+        dayButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const dayNumber = this.getAttribute('data-day');
+                updateCurrentDayInfo(dayNumber);
+            });
+        });
+    }
+    
+    // Handle window resize to recreate mobile nav if needed
+    window.addEventListener('resize', function() {
+        const isMobile = window.innerWidth <= 768;
+        const mobileNavExists = document.querySelector('.mobile-itinerary-nav');
+        
+        if (isMobile && !mobileNavExists) {
+            createMobileItineraryNav(dayButtons, dayCards);
+        } else if (!isMobile && mobileNavExists) {
+            mobileNavExists.remove();
+            const dayButtonsContainer = document.querySelector('.day-buttons');
+            if (dayButtonsContainer) {
+                dayButtonsContainer.classList.remove('desktop-only');
+            }
+        }
+    });
 }
 
 // Add setupCollapsibleSections function
