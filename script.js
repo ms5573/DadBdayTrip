@@ -188,131 +188,145 @@ function setupGallery() {
 
 // Initialize the map with trip locations
 function initMap() {
-    // Create map centered on Japan
-    const map = L.map('japan-trip-map').setView([36.2048, 138.2529], 5);
+    // Create map centered on Japan with adjusted zoom level for better overview
+    const map = L.map('japan-trip-map').setView([36.2048, 138.2529], 6);
     
-    // Add tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    // Add a cleaner tile layer with less detail
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
         maxZoom: 18
     }).addTo(map);
     
-    // Custom icons for different types of locations
+    // Simplified custom icons for different types of locations
     const icons = {
         start: L.divIcon({
             className: 'custom-marker start-marker',
             html: '<div class="marker-dot"></div><div class="pulse"></div>',
-            iconSize: [30, 30],
-            iconAnchor: [15, 15]
-        }),
-        destination: L.divIcon({
-            className: 'custom-marker destination-marker',
-            html: '<div class="marker-dot"></div><div class="pulse"></div>',
             iconSize: [24, 24],
             iconAnchor: [12, 12]
         }),
-        dayTrip: L.divIcon({
-            className: 'custom-marker day-trip-marker',
+        destination: L.divIcon({
+            className: 'custom-marker destination-marker',
             html: '<div class="marker-dot"></div>',
             iconSize: [20, 20],
             iconAnchor: [10, 10]
         }),
+        dayTrip: L.divIcon({
+            className: 'custom-marker day-trip-marker',
+            html: '<div class="marker-dot"></div>',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        }),
         end: L.divIcon({
             className: 'custom-marker end-marker',
             html: '<div class="marker-dot"></div><div class="pulse"></div>',
-            iconSize: [30, 30],
-            iconAnchor: [15, 15]
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
         })
     };
     
-    // Define locations
+    // Define key locations from the itinerary with clear English names
     const locations = [
         {
-            name: "Tokyo (Arrival)",
+            name: "Tokyo (Start)",
             coords: [35.6762, 139.6503],
-            days: [1, 2, 3, 17, 18],
+            days: [1, 2, 3],
             type: "start",
-            description: "Starting point of our journey. We'll explore different areas of Tokyo, from traditional Asakusa to modern Shibuya."
+            description: "Days 1-3: Exploring Asakusa, Ginza, Meiji Shrine, Harajuku and Shibuya"
+        },
+        {
+            name: "Yokohama",
+            coords: [35.4437, 139.6380],
+            days: [4, 5],
+            type: "destination",
+            description: "Days 4-5: Visiting Kamakura and celebrating Robert's 70th birthday"
         },
         {
             name: "Hakone",
             coords: [35.2323, 139.1071],
-            days: [4, 5],
+            days: [6, 7],
             type: "destination",
-            description: "Relaxing in hot springs (onsen) with views of Mt. Fuji and Lake Ashi."
+            description: "Days 6-7: Hot springs (onsen), Lake Ashi cruise and Mt. Fuji views"
         },
         {
             name: "Kyoto",
             coords: [35.0116, 135.7681],
-            days: [6, 7, 8, 9],
+            days: [8, 9, 10, 11],
             type: "destination",
-            description: "Exploring Japan's ancient capital with its numerous temples, shrines, and traditional gardens."
-        },
-        {
-            name: "Nara",
-            coords: [34.6851, 135.8048],
-            days: [8],
-            type: "dayTrip",
-            description: "Day trip to see the famous deer park and Todai-ji Temple with its giant Buddha statue."
-        },
-        {
-            name: "Hiroshima",
-            coords: [34.3853, 132.4553],
-            days: [10, 11],
-            type: "destination",
-            description: "Visiting the Peace Memorial Park and Museum, and experiencing the city's rebirth and resilience."
-        },
-        {
-            name: "Miyajima",
-            coords: [34.2962, 132.3194],
-            days: [11],
-            type: "dayTrip",
-            description: "Day trip to see the famous floating torii gate and beautiful island scenery."
+            description: "Days 8-11: Historic temples, bamboo grove, and traditional culture"
         },
         {
             name: "Himeji",
             coords: [34.8397, 134.6937],
             days: [12],
             type: "destination",
-            description: "Visiting Japan's most spectacular feudal castle, known as the White Heron Castle."
+            description: "Day 12: Visit to Japan's most spectacular feudal castle"
+        },
+        {
+            name: "Hiroshima",
+            coords: [34.3853, 132.4553],
+            days: [12, 13],
+            type: "destination",
+            description: "Days 12-13: Peace Memorial Park and Museum"
         },
         {
             name: "Kanazawa",
             coords: [36.5626, 136.6562],
-            days: [13, 14],
+            days: [14, 15],
             type: "destination",
-            description: "Exploring the well-preserved Edo-era districts, beautiful Kenroku-en Garden, and the 21st Century Museum."
+            description: "Days 14-15: Kenroku-en Garden, samurai district, and traditional crafts"
         },
         {
-            name: "Takayama",
-            coords: [36.1417, 137.2520],
-            days: [15, 16],
-            type: "destination",
-            description: "Experiencing traditional rural Japan in this well-preserved mountain town."
-        },
-        {
-            name: "Shirakawa-go",
-            coords: [36.2568, 136.9042],
-            days: [15],
-            type: "dayTrip",
-            description: "Day trip to see the historic thatched-roof houses in this UNESCO World Heritage village."
-        },
-        {
-            name: "Tokyo (Departure)",
+            name: "Tokyo (End)",
             coords: [35.6762, 139.6503],
-            days: [17, 18],
+            days: [16, 17, 18],
             type: "end",
-            description: "Final days in Tokyo for last-minute shopping, experiences, and preparing for departure."
+            description: "Days 16-18: Final shopping, farewell dinner, and departure"
         }
     ];
     
+    // Only include the most significant day trips
+    const dayTrips = [
+        {
+            name: "Nara",
+            coords: [34.6851, 135.8048],
+            days: [11],
+            type: "dayTrip",
+            fromLocation: "Kyoto",
+            description: "Day 11: Famous deer park and Todai-ji Temple with giant Buddha"
+        },
+        {
+            name: "Miyajima",
+            coords: [34.2962, 132.3194],
+            days: [13],
+            type: "dayTrip",
+            fromLocation: "Hiroshima",
+            description: "Day 13: Island with iconic floating torii gate"
+        }
+    ];
+    
+    // Combine all locations for display
+    const allLocations = [...locations, ...dayTrips];
+    
     // Add markers and popups for each location
     const markers = {};
-    locations.forEach(location => {
+    allLocations.forEach(location => {
         const icon = icons[location.type];
         const marker = L.marker(location.coords, { icon: icon }).addTo(map);
         
-        // Create popup content
+        // Add text label for main destinations
+        if (location.type !== "dayTrip") {
+            L.marker(location.coords, {
+                icon: L.divIcon({
+                    className: 'map-label',
+                    html: `<div>${location.name}</div>`,
+                    iconSize: [100, 20],
+                    iconAnchor: [50, -10]
+                })
+            }).addTo(map);
+        }
+        
+        // Create simplified popup content
         const dayLabels = location.days.map(day => `<span class="day-label">Day ${day}</span>`).join(' ');
         const popupContent = `
             <div class="map-popup">
@@ -326,39 +340,37 @@ function initMap() {
         markers[location.name] = marker;
     });
     
-    // Draw route lines between destinations
-    const destinationCoords = locations.filter(loc => 
-        loc.type === "start" || loc.type === "destination" || loc.type === "end"
-    ).map(loc => loc.coords);
+    // Draw simplified main route line with more subtle styling
+    const mainRouteCoords = locations.map(loc => loc.coords);
     
-    const mainRoute = L.polyline(destinationCoords, {
+    const mainRoute = L.polyline(mainRouteCoords, {
         color: '#e91e63',
-        weight: 3,
-        opacity: 0.7,
-        dashArray: '10, 10',
+        weight: 2,
+        opacity: 0.5,
+        dashArray: '5, 10',
         lineCap: 'round'
     }).addTo(map);
     
-    // Draw lines for day trips
-    const dayTrips = locations.filter(loc => loc.type === "dayTrip");
+    // Draw selected day trip routes with even more subtle styling
     dayTrips.forEach(dayTrip => {
-        // Find the main destination this day trip is from
-        const dayTripDay = dayTrip.days[0];
-        const fromDestination = locations.find(loc => 
-            loc.type === "destination" && 
-            loc.days.includes(dayTripDay) &&
-            loc.name !== dayTrip.name
-        );
+        const fromDestination = locations.find(loc => loc.name === dayTrip.fromLocation);
         
         if (fromDestination) {
-            const dayTripRoute = L.polyline([fromDestination.coords, dayTrip.coords], {
+            L.polyline([fromDestination.coords, dayTrip.coords], {
                 color: '#2196F3',
-                weight: 2,
-                opacity: 0.6,
-                dashArray: '5, 5',
+                weight: 1.5,
+                opacity: 0.4,
+                dashArray: '3, 6',
                 lineCap: 'round'
             }).addTo(map);
         }
+    });
+    
+    // Ensure map fits all locations
+    const bounds = L.latLngBounds(allLocations.map(loc => loc.coords));
+    map.fitBounds(bounds, {
+        padding: [30, 30],
+        maxZoom: 7
     });
 }
 
