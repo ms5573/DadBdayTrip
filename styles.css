@@ -1126,3 +1126,72 @@ nav {
         font-size: 0.85rem;
     }
 }
+
+/* Helpful Links Styling */
+.helpful-links {
+    background-color: rgba(245, 245, 245, 0.6);
+    border-radius: 8px;
+    padding: var(--space-md);
+    margin: var(--space-md) 0;
+    border-left: 4px solid var(--aka);
+}
+
+.helpful-links h5 {
+    color: var(--akane);
+    margin-top: 0;
+    margin-bottom: var(--space-sm);
+    font-size: 1.1rem;
+}
+
+.helpful-links ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.helpful-links li {
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--medium-gray);
+}
+
+.helpful-links li:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.helpful-links a {
+    display: inline-block;
+    font-weight: 500;
+    margin-bottom: var(--space-xs);
+    text-decoration: none;
+    color: var(--akane);
+}
+
+.helpful-links a:hover {
+    color: var(--aka);
+    text-decoration: underline;
+}
+
+.helpful-links small {
+    display: block;
+    color: var(--kuro);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .helpful-links {
+        padding: var(--space-sm);
+        margin: var(--space-sm) 0;
+    }
+
+    .helpful-links h5 {
+        font-size: 1rem;
+    }
+
+    .helpful-links small {
+        font-size: 0.85rem;
+    }
+}
