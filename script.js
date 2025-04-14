@@ -2,41 +2,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Robert\'s Japan Trip website loaded');
     
-    // Initialize all components
-    initCollapsible();
-    initDayCards();
-    initBackToTop();
-    initNavLinks();
-    initMap(); // Initialize the Japan trip map
+    // Single initialization of all components
+    initializeWebsite();
     
-    // Make all content visible with animations
-    document.querySelectorAll('.fade-in, .slide-in').forEach(element => {
-        element.classList.add('visible');
-    });
-
-    // Initialize smooth scrolling for navigation links
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            
-            if (targetElement) {
-                const headerHeight = document.querySelector('header').offsetHeight;
-                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
-                
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-    // Remove any code that might be duplicate or conflicting
-    // with our initialization functions
+    // Initialize the map separately after other components
+    initMap();
 });
 
 // Smooth scrolling implementation
@@ -187,15 +157,28 @@ function setupGallery() {
 }
 
 // Initialize the map with trip locations
+let japanMap; // Global variable to track if map is initialized
 function initMap() {
+    // Check if map is already initialized
+    if (japanMap) {
+        console.log('Map already initialized, skipping...');
+        return;
+    }
+    
+    const mapContainer = document.getElementById('japan-trip-map');
+    if (!mapContainer) {
+        console.error('Map container not found');
+        return;
+    }
+    
     // Create map centered on Japan with adjusted zoom level for better overview
-    const map = L.map('japan-trip-map').setView([36.2048, 138.2529], 6);
+    japanMap = L.map('japan-trip-map').setView([36.2048, 138.2529], 6);
     
     // Add a cleaner tile layer with less detail
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
         maxZoom: 18
-    }).addTo(map);
+    }).addTo(japanMap);
     
     // Simplified custom icons for different types of locations
     const icons = {
@@ -312,7 +295,7 @@ function initMap() {
     const markers = {};
     allLocations.forEach(location => {
         const icon = icons[location.type];
-        const marker = L.marker(location.coords, { icon: icon }).addTo(map);
+        const marker = L.marker(location.coords, { icon: icon }).addTo(japanMap);
         
         // Add text label for main destinations
         if (location.type !== "dayTrip") {
@@ -323,7 +306,7 @@ function initMap() {
                     iconSize: [100, 20],
                     iconAnchor: [50, -10]
                 })
-            }).addTo(map);
+            }).addTo(japanMap);
         }
         
         // Create simplified popup content
@@ -349,7 +332,7 @@ function initMap() {
         opacity: 0.5,
         dashArray: '5, 10',
         lineCap: 'round'
-    }).addTo(map);
+    }).addTo(japanMap);
     
     // Draw selected day trip routes with even more subtle styling
     dayTrips.forEach(dayTrip => {
@@ -362,51 +345,35 @@ function initMap() {
                 opacity: 0.4,
                 dashArray: '3, 6',
                 lineCap: 'round'
-            }).addTo(map);
+            }).addTo(japanMap);
         }
     });
     
     // Ensure map fits all locations
     const bounds = L.latLngBounds(allLocations.map(loc => loc.coords));
-    map.fitBounds(bounds, {
+    japanMap.fitBounds(bounds, {
         padding: [30, 30],
         maxZoom: 7
     });
 }
 
-// Connect all the initialization code in one function that runs when the page loads
-function initializeWebsite() {
-    document.addEventListener('DOMContentLoaded', () => {
-        setupNavigation();
-        setupDaySelectors();
-        setupCollapsibleSections();
-        setupSectionAnimations();
-        setupBackToTopButton();
-        initMap(); // Initialize the map
-    });
-}
-
-// Call the main initialization function
-initializeWebsite();
-
-function initNavLinks() {
+// Add the missing setupNavigation function
+function setupNavigation() {
+    // Initialize smooth scrolling for navigation links
     const navLinks = document.querySelectorAll('nav a');
-    const sections = document.querySelectorAll('section');
-    const header = document.querySelector('header');
-    const headerHeight = header ? header.offsetHeight : 0;
-    
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             
             const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
+            const targetElement = document.querySelector(targetId);
             
-            if (targetSection) {
-                const offsetTop = targetSection.offsetTop - headerHeight;
+            if (targetElement) {
+                const headerHeight = document.querySelector('header').offsetHeight;
+                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
                 
                 window.scrollTo({
-                    top: offsetTop,
+                    top: targetPosition,
                     behavior: 'smooth'
                 });
             }
@@ -414,6 +381,10 @@ function initNavLinks() {
     });
     
     // Update active link on scroll
+    const sections = document.querySelectorAll('section');
+    const header = document.querySelector('header');
+    const headerHeight = header ? header.offsetHeight : 0;
+    
     window.addEventListener('scroll', function() {
         let current = '';
         const scrollPos = window.pageYOffset;
@@ -436,29 +407,17 @@ function initNavLinks() {
     });
 }
 
-function initCollapsible() {
-    const collapsibleTriggers = document.querySelectorAll('.collapsible-trigger');
-    
-    collapsibleTriggers.forEach(trigger => {
-        trigger.addEventListener('click', function() {
-            this.classList.toggle('active');
-            const content = this.nextElementSibling;
-            
-            if (content.style.display === 'block') {
-                content.style.display = 'none';
-            } else {
-                content.style.display = 'block';
-            }
-        });
-    });
-
-    // Hide all collapsible content initially
-    document.querySelectorAll('.collapsible-content').forEach(content => {
-        content.style.display = 'none';
-    });
+// Connect all the initialization code in one function
+function initializeWebsite() {
+    setupNavigation();
+    setupDaySelectors();
+    setupCollapsibleSections();
+    setupSectionAnimations();
+    setupBackToTopButton();
 }
 
-function initDayCards() {
+// Add setupDaySelectors function
+function setupDaySelectors() {
     const dayButtons = document.querySelectorAll('.day-buttons button');
     const dayCards = document.querySelectorAll('.day-card');
     
@@ -503,7 +462,31 @@ function initDayCards() {
     });
 }
 
-function initBackToTop() {
+// Add setupCollapsibleSections function
+function setupCollapsibleSections() {
+    const collapsibleTriggers = document.querySelectorAll('.collapsible-trigger');
+    
+    collapsibleTriggers.forEach(trigger => {
+        trigger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+            } else {
+                content.style.display = 'block';
+            }
+        });
+    });
+
+    // Hide all collapsible content initially
+    document.querySelectorAll('.collapsible-content').forEach(content => {
+        content.style.display = 'none';
+    });
+}
+
+// Add setupBackToTopButton function
+function setupBackToTopButton() {
     const backToTopButton = document.querySelector('.back-to-top');
     
     if (backToTopButton) {
@@ -524,30 +507,4 @@ function initBackToTop() {
             });
         });
     }
-}
-
-function initRippleEffect() {
-    document.addEventListener('click', function(e) {
-        const target = e.target;
-        
-        if (target.classList.contains('day-selector button') || 
-            target.classList.contains('back-to-top') || 
-            target.tagName === 'BUTTON') {
-            
-            const rect = target.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const ripple = document.createElement('span');
-            ripple.className = 'ripple';
-            ripple.style.left = x + 'px';
-            ripple.style.top = y + 'px';
-            
-            target.appendChild(ripple);
-            
-            setTimeout(function() {
-                ripple.remove();
-            }, 600);
-        }
-    });
 }
