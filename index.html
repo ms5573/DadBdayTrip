@@ -8,6 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
 <body>
     <header>
@@ -632,13 +636,55 @@
                 <div class="section-decoration"></div>
                 <h1>Trip Map</h1>
             </div>
+            <p>Follow our 18-day journey across Japan, from Tokyo to Kyoto, Hiroshima, Kanazawa and more. Click on the markers to see details about each destination.</p>
+            
             <div class="map-container">
-                <div class="map-placeholder">
-                    <p>Interactive map will be available soon</p>
-                    <p>Showing all destinations across Japan</p>
+                <div id="japan-trip-map"></div>
+                <div class="map-legend">
+                    <h3>Trip Route</h3>
+                    <ul>
+                        <li><span class="legend-marker start"></span> Starting Point (Tokyo)</li>
+                        <li><span class="legend-marker destination"></span> Major Destinations</li>
+                        <li><span class="legend-marker day-trip"></span> Day Trips</li>
+                        <li><span class="legend-marker end"></span> End Point (Tokyo)</li>
+                    </ul>
+                    <div class="map-stats">
+                        <div class="stat">
+                            <span class="stat-number">18</span>
+                            <span class="stat-label">Days</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">9</span>
+                            <span class="stat-label">Cities</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">5</span>
+                            <span class="stat-label">Regions</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <p>This map will show all the locations we'll visit during our 18-day journey through Japan, from the modern metropolis of Tokyo to the traditional temples of Kyoto, the scenic beauty of Hakone, and beyond.</p>
+            <div class="map-details">
+                <h3>Trip Highlights</h3>
+                <div class="map-highlights">
+                    <div class="highlight-card">
+                        <h4>Tokyo Experience</h4>
+                        <p>Urban adventures in Japan's bustling capital, from ancient temples to modern districts</p>
+                    </div>
+                    <div class="highlight-card">
+                        <h4>Kyoto's Traditions</h4>
+                        <p>Explore centuries of history in Japan's ancient capital, with temples, gardens and geisha</p>
+                    </div>
+                    <div class="highlight-card">
+                        <h4>Nature & Relaxation</h4>
+                        <p>Hot springs in Hakone, views of Mt. Fuji, and scenic Lake Ashi</p>
+                    </div>
+                    <div class="highlight-card">
+                        <h4>Historic Journeys</h4>
+                        <p>Powerful visits to Hiroshima, feudal castle in Himeji, and Kanazawa's preserved districts</p>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section id="gallery" class="slide-in">
