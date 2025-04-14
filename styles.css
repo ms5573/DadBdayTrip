@@ -15,6 +15,9 @@
     --space-md: 1rem;
     --space-lg: 2rem;
     --space-xl: 4rem;
+    
+    /* Mobile menu transition */
+    --transition-speed: 0.3s;
 }
 
 * {
@@ -673,86 +676,224 @@ footer {
     }
     
     header {
-        padding: var(--space-sm);
-        flex-direction: column;
-        height: auto;
+        padding: var(--space-sm) var(--space-md);
+    }
+    
+    .logo {
+        font-size: 1.5rem;
+    }
+    
+    .logo span:first-child {
+        font-size: 1.8rem;
+    }
+    
+    .mobile-menu-btn {
+        display: block;
+    }
+    
+    nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 75%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: var(--gofun);
+        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        transition: right var(--transition-speed) ease;
+        z-index: 1000;
+        padding-top: 70px;
+    }
+    
+    nav.show {
+        right: 0;
     }
     
     nav ul {
         flex-direction: column;
-        width: 100%;
-        margin-top: var(--space-sm);
-    }
-    
-    nav li {
-        margin: var(--space-xs) 0;
-        text-align: center;
-    }
-    
-    .gallery-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
-    
-    .tips-container {
-        grid-template-columns: 1fr;
-    }
-    
-    section {
         padding: var(--space-md);
     }
     
+    nav li {
+        margin: 0 0 var(--space-md) 0;
+        width: 100%;
+        border-bottom: 1px solid var(--medium-gray);
+        padding-bottom: var(--space-sm);
+    }
+    
+    nav a {
+        display: block;
+        padding: var(--space-sm) 0;
+        font-size: 1.2rem;
+    }
+    
+    /* Overlay when menu is open */
+    .menu-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 999;
+    }
+    
+    .menu-overlay.show {
+        display: block;
+    }
+    
+    /* Improved day selector */
+    .day-buttons {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: var(--space-sm);
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        gap: var(--space-xs);
+        position: sticky;
+        top: 60px;
+        background-color: white;
+        padding: var(--space-sm);
+        margin: calc(-1 * var(--space-md)) calc(-1 * var(--space-md)) var(--space-md);
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        z-index: 10;
+    }
+    
+    .day-buttons::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+    
+    .day-buttons button {
+        flex: 0 0 auto;
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 0.9rem;
+        min-width: auto;
+        border-radius: 15px;
+    }
+    
+    /* Day indicator for mobile */
+    .day-indicator {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--aka);
+        color: white;
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: 30px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        z-index: 100;
+    }
+    
+    /* Improved day cards for mobile */
+    .day-card {
+        padding: var(--space-md);
+    }
+    
+    .day-card h3 {
+        font-size: 1.3rem;
+    }
+    
+    .day-card h4 {
+        font-size: 1.1rem;
+    }
+    
+    .day-highlights ul {
+        padding-left: var(--space-md);
+    }
+    
+    /* Gallery improvements for mobile */
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-sm);
+    }
+    
+    /* Better padding for sections on mobile */
+    section {
+        padding: var(--space-md);
+        border-radius: 12px;
+        margin-bottom: var(--space-md);
+    }
+    
+    /* Improved intro section layout */
+    .intro-container {
+        flex-direction: column;
+    }
+    
+    .intro-text {
+        width: 100%;
+    }
+    
+    .intro-image {
+        width: 60%;
+        margin: 0 auto;
+    }
+    
+    /* Map adjustments */
+    .map-container {
+        height: 400px;
+    }
+    
+    #japan-trip-map {
+        height: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 0.95rem;
+    }
+    
+    .logo span:not(:first-child) {
+        display: none;
+    }
+    
     h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
     
     h2 {
         font-size: 1.5rem;
     }
     
-    .map-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    #japan-trip-map {
-        height: 400px;
-    }
-    
-    .map-legend-container {
-        flex-direction: column;
-    }
-    
-    .map-stats {
-        border-left: none;
-        border-top: 1px solid #eee;
-        padding-left: 0;
-        padding-top: 15px;
-        margin-top: 15px;
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .legend-items {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 480px) {
-    body {
-        padding-top: 120px;
-    }
-    
-    h2 {
-        font-size: 1.8rem;
-    }
-    
     .day-buttons button {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.9rem;
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 0.8rem;
+        min-width: 3.5rem;
     }
     
+    .day-card {
+        padding: var(--space-sm);
+    }
+    
+    /* Further improve gallery for small screens */
     .gallery-grid {
         grid-template-columns: 1fr;
+    }
+    
+    /* Adjust collapsible content */
+    .collapsible-trigger {
+        font-size: 0.9rem;
+        padding: var(--space-sm) var(--space-md);
+    }
+    
+    /* Improve footer spacing */
+    footer {
+        padding: var(--space-md);
+    }
+    
+    /* Back to top button adjustments */
+    .back-to-top {
+        bottom: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
     }
 }
 
@@ -865,4 +1006,123 @@ footer {
 /* Adjust section title spacing for better flow */
 .section-title {
     margin-bottom: 20px;
+}
+
+/* Mobile Menu Button (Hamburger) */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--space-sm);
+    z-index: 1001;
+    position: relative;
+}
+
+.mobile-menu-btn span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px 0;
+    position: relative;
+    background-color: var(--aka);
+    border-radius: 3px;
+    transform-origin: center;
+    transition: transform var(--transition-speed) ease, 
+                opacity var(--transition-speed) ease;
+}
+
+.mobile-menu-btn.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.mobile-menu-btn.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-btn.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Add mobile-specific body class */
+body.menu-open {
+    overflow: hidden;
+}
+
+/* Transitions for day indicator */
+.day-indicator {
+    transition: opacity 0.3s ease;
+}
+
+/* Add smooth transition to navigation */
+nav {
+    transition: right var(--transition-speed) ease;
+}
+
+/* Mobile day card transitions */
+.day-card {
+    transition: opacity 0.3s ease;
+}
+
+/* Sticky header adjustments */
+@media (max-width: 768px) {
+    /* Fixed height for day buttons container */
+    .day-buttons {
+        height: 50px;
+        z-index: 90;
+    }
+    
+    /* Improve tap targets on mobile */
+    .collapsible-trigger, 
+    nav a,
+    .day-buttons button {
+        min-height: 44px;
+    }
+    
+    /* Prevent text size adjustments */
+    html {
+        -webkit-text-size-adjust: 100%;
+    }
+    
+    /* Ensure content is visible under sticky header */
+    main {
+        padding-top: 5px;
+    }
+    
+    /* Make map controls more touchable */
+    .leaflet-control-zoom a {
+        width: 36px !important;
+        height: 36px !important;
+        line-height: 36px !important;
+    }
+    
+    /* Improve gallery for mobile */
+    .gallery-item {
+        height: 180px;
+    }
+}
+
+@media (max-width: 480px) {    
+    /* Maximum size for day indicator on mobile */
+    .day-indicator {
+        max-width: 100px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    
+    /* More compact footer */
+    .footer-pattern {
+        height: 40px;
+    }
+    
+    /* Less padding on small screens */
+    .day-highlights {
+        padding: var(--space-sm);
+    }
+    
+    /* Smaller font for collapsible trigger */
+    .collapsible-trigger {
+        font-size: 0.85rem;
+    }
 }

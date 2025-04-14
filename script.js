@@ -62,41 +62,97 @@ function setupNavHighlighting() {
 
 // Setup mobile navigation menu
 function setupMobileNav() {
-    // Add mobile menu button to the header
-    const header = document.querySelector('header');
-    const mobileMenuBtn = document.createElement('button');
-    mobileMenuBtn.className = 'mobile-menu-btn';
-    mobileMenuBtn.setAttribute('aria-label', 'Toggle navigation menu');
-    mobileMenuBtn.innerHTML = `
-        <span></span>
-        <span></span>
-        <span></span>
-    `;
-    header.appendChild(mobileMenuBtn);
-    
-    // Add event listener to toggle menu
-    const navMenu = document.querySelector('nav ul');
-    mobileMenuBtn.addEventListener('click', function() {
-        this.classList.toggle('active');
-        navMenu.classList.toggle('show');
-    });
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!navMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-            mobileMenuBtn.classList.remove('active');
-            navMenu.classList.remove('show');
-        }
-    });
-    
-    // Close menu when a link is clicked
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            mobileMenuBtn.classList.remove('active');
-            navMenu.classList.remove('show');
+    // Add mobile menu button to the header if it doesn't exist
+    if (!document.querySelector('.mobile-menu-btn')) {
+        const header = document.querySelector('header');
+        const mobileMenuBtn = document.createElement('button');
+        mobileMenuBtn.className = 'mobile-menu-btn';
+        mobileMenuBtn.setAttribute('aria-label', 'Toggle navigation menu');
+        mobileMenuBtn.innerHTML = `
+            <span></span>
+            <span></span>
+            <span></span>
+        `;
+        header.appendChild(mobileMenuBtn);
+        
+        // Add menu overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'menu-overlay';
+        document.body.appendChild(overlay);
+        
+        // Toggle menu when button is clicked
+        mobileMenuBtn.addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('nav').classList.toggle('show');
+            document.querySelector('.menu-overlay').classList.toggle('show');
+            document.body.classList.toggle('menu-open');
         });
-    });
+        
+        // Close menu when clicking on overlay
+        overlay.addEventListener('click', function() {
+            mobileMenuBtn.classList.remove('active');
+            document.querySelector('nav').classList.remove('show');
+            document.querySelector('.menu-overlay').classList.remove('show');
+            document.body.classList.remove('menu-open');
+        });
+        
+        // Close menu when a navigation link is clicked
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenuBtn.classList.remove('active');
+                document.querySelector('nav').classList.remove('show');
+                document.querySelector('.menu-overlay').classList.remove('show');
+                document.body.classList.remove('menu-open');
+            });
+        });
+    }
+    
+    // Add day indicator for mobile
+    if (!document.querySelector('.day-indicator')) {
+        const dayIndicator = document.createElement('div');
+        dayIndicator.className = 'day-indicator';
+        dayIndicator.textContent = 'Day 1';
+        document.body.appendChild(dayIndicator);
+        
+        // Update day indicator on scroll
+        const dayCards = document.querySelectorAll('.day-card');
+        if (dayCards.length > 0) {
+            window.addEventListener('scroll', function() {
+                // Only show on mobile and when in itinerary section
+                const itinerarySection = document.getElementById('itinerary');
+                const rect = itinerarySection.getBoundingClientRect();
+                
+                if (window.innerWidth <= 768 && 
+                    rect.top <= 0 && 
+                    rect.bottom >= 0) {
+                    dayIndicator.style.display = 'block';
+                    
+                    // Find which day card is most visible
+                    let mostVisibleCard = null;
+                    let maxVisibleHeight = 0;
+                    
+                    dayCards.forEach((card, index) => {
+                        const cardRect = card.getBoundingClientRect();
+                        const visibleHeight = Math.min(cardRect.bottom, window.innerHeight) - 
+                                             Math.max(cardRect.top, 0);
+                        
+                        if (visibleHeight > maxVisibleHeight) {
+                            maxVisibleHeight = visibleHeight;
+                            mostVisibleCard = card;
+                        }
+                    });
+                    
+                    if (mostVisibleCard) {
+                        const dayTitle = mostVisibleCard.querySelector('h3').textContent;
+                        dayIndicator.textContent = dayTitle.split(' - ')[0]; // Just the "Day X" part
+                    }
+                } else {
+                    dayIndicator.style.display = 'none';
+                }
+            });
+        }
+    }
 }
 
 // Setup section animations on scroll
@@ -414,6 +470,7 @@ function initializeWebsite() {
     setupCollapsibleSections();
     setupSectionAnimations();
     setupBackToTopButton();
+    setupMobileNav(); // Add mobile navigation setup
 }
 
 // Add setupDaySelectors function
@@ -434,8 +491,11 @@ function setupDaySelectors() {
     }
     
     // Add click event to each day button
-    dayButtons.forEach((button, index) => {
+    dayButtons.forEach(button => {
         button.addEventListener('click', function() {
+            // Get the day number from data attribute
+            const dayNumber = this.getAttribute('data-day');
+            
             // Remove active class from all buttons
             dayButtons.forEach(btn => btn.classList.remove('active'));
             
@@ -448,18 +508,108 @@ function setupDaySelectors() {
             });
             
             // Show the corresponding day card
-            if (dayCards[index]) {
-                dayCards[index].style.display = 'flex';
+            const targetCard = document.querySelector(`.day-card[data-day="${dayNumber}"]`);
+            if (targetCard) {
+                targetCard.style.display = 'flex';
                 
                 // Scroll to day card for better user experience
-                dayCards[index].scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start',
-                    inline: 'nearest'
+                const headerOffset = 70; // Account for fixed header
+                const elementPosition = targetCard.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
                 });
+                
+                // Update URL hash without scrolling
+                const dayIndicator = document.querySelector('.day-indicator');
+                if (dayIndicator) {
+                    dayIndicator.textContent = `Day ${dayNumber}`;
+                    dayIndicator.style.display = 'block';
+                    
+                    // Hide day indicator after a few seconds
+                    setTimeout(() => {
+                        dayIndicator.style.opacity = '0';
+                        setTimeout(() => {
+                            dayIndicator.style.opacity = '1';
+                            dayIndicator.style.display = 'none';
+                        }, 300);
+                    }, 2000);
+                }
             }
         });
     });
+    
+    // Add swipe gesture support for mobile devices
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const swipeThreshold = 80; // Minimum swipe distance in pixels
+    
+    document.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    }, false);
+    
+    document.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, false);
+    
+    function handleSwipe() {
+        // Only process swipe if we're viewing a day card
+        const currentDay = document.querySelector('.day-buttons button.active');
+        if (!currentDay) return;
+        
+        const dayNumber = parseInt(currentDay.getAttribute('data-day'));
+        if (isNaN(dayNumber)) return;
+        
+        // Calculate swipe distance
+        const swipeDistance = touchEndX - touchStartX;
+        
+        // Determine swipe direction and navigate
+        if (swipeDistance > swipeThreshold) {
+            // Swipe right -> go to previous day
+            if (dayNumber > 1) {
+                const prevButton = document.querySelector(`.day-buttons button[data-day="${dayNumber - 1}"]`);
+                if (prevButton) prevButton.click();
+            }
+        } else if (swipeDistance < -swipeThreshold) {
+            // Swipe left -> go to next day
+            if (dayNumber < 18) {
+                const nextButton = document.querySelector(`.day-buttons button[data-day="${dayNumber + 1}"]`);
+                if (nextButton) nextButton.click();
+            }
+        }
+    }
+    
+    // Auto-scroll day selector to show active day
+    function scrollDayButtonIntoView(dayNumber) {
+        const dayButton = document.querySelector(`.day-buttons button[data-day="${dayNumber}"]`);
+        if (dayButton) {
+            const buttonContainer = document.querySelector('.day-buttons');
+            const buttonRect = dayButton.getBoundingClientRect();
+            const containerRect = buttonContainer.getBoundingClientRect();
+            
+            // Calculate position to center the button
+            const scrollLeft = buttonContainer.scrollLeft + 
+                               buttonRect.left - 
+                               containerRect.left - 
+                               containerRect.width / 2 + 
+                               buttonRect.width / 2;
+            
+            buttonContainer.scrollTo({
+                left: scrollLeft,
+                behavior: 'smooth'
+            });
+        }
+    }
+    
+    // Center active day button when page loads
+    const activeButton = document.querySelector('.day-buttons button.active');
+    if (activeButton) {
+        const dayNumber = activeButton.getAttribute('data-day');
+        scrollDayButtonIntoView(dayNumber);
+    }
 }
 
 // Add setupCollapsibleSections function
