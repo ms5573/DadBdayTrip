@@ -62,97 +62,89 @@ function setupNavHighlighting() {
 
 // Setup mobile navigation menu
 function setupMobileNav() {
-    // Add mobile menu button to the header if it doesn't exist
-    if (!document.querySelector('.mobile-menu-btn')) {
-        const header = document.querySelector('header');
-        const mobileMenuBtn = document.createElement('button');
-        mobileMenuBtn.className = 'mobile-menu-btn';
-        mobileMenuBtn.setAttribute('aria-label', 'Toggle navigation menu');
-        mobileMenuBtn.innerHTML = `
-            <span></span>
-            <span></span>
-            <span></span>
-        `;
-        header.appendChild(mobileMenuBtn);
-        
-        // Add menu overlay
-        const overlay = document.createElement('div');
-        overlay.className = 'menu-overlay';
-        document.body.appendChild(overlay);
-        
-        // Toggle menu when button is clicked
-        mobileMenuBtn.addEventListener('click', function() {
-            this.classList.toggle('active');
-            document.querySelector('nav').classList.toggle('show');
-            document.querySelector('.menu-overlay').classList.toggle('show');
-            document.body.classList.toggle('menu-open');
-        });
-        
-        // Close menu when clicking on overlay
-        overlay.addEventListener('click', function() {
-            mobileMenuBtn.classList.remove('active');
-            document.querySelector('nav').classList.remove('show');
-            document.querySelector('.menu-overlay').classList.remove('show');
-            document.body.classList.remove('menu-open');
-        });
-        
-        // Close menu when a navigation link is clicked
-        const navLinks = document.querySelectorAll('nav a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                mobileMenuBtn.classList.remove('active');
-                document.querySelector('nav').classList.remove('show');
-                document.querySelector('.menu-overlay').classList.remove('show');
-                document.body.classList.remove('menu-open');
-            });
-        });
-    }
-    
-    // Add day indicator for mobile
-    if (!document.querySelector('.day-indicator')) {
-        const dayIndicator = document.createElement('div');
-        dayIndicator.className = 'day-indicator';
-        dayIndicator.textContent = 'Day 1';
-        document.body.appendChild(dayIndicator);
-        
-        // Update day indicator on scroll
-        const dayCards = document.querySelectorAll('.day-card');
-        if (dayCards.length > 0) {
-            window.addEventListener('scroll', function() {
-                // Only show on mobile and when in itinerary section
-                const itinerarySection = document.getElementById('itinerary');
+    const nav = document.querySelector('nav');
+    const dayIndicator = document.createElement('div');
+    dayIndicator.className = 'day-indicator';
+    document.body.appendChild(dayIndicator);
+
+    // Create mobile menu button
+    const menuButton = document.createElement('button');
+    menuButton.className = 'mobile-menu-button';
+    menuButton.innerHTML = '☰';
+    nav.insertBefore(menuButton, nav.firstChild);
+
+    // Toggle mobile menu
+    menuButton.addEventListener('click', () => {
+        nav.classList.toggle('mobile-menu-open');
+        menuButton.innerHTML = nav.classList.contains('mobile-menu-open') ? '✕' : '☰';
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!nav.contains(e.target) && nav.classList.contains('mobile-menu-open')) {
+            nav.classList.remove('mobile-menu-open');
+            menuButton.innerHTML = '☰';
+        }
+    });
+
+    // Update day indicator based on scroll position
+    let lastScrollTop = 0;
+    let scrollTimeout;
+    const itinerarySection = document.getElementById('itinerary');
+    const dayCards = document.querySelectorAll('.day-card');
+
+    window.addEventListener('scroll', () => {
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+
+        scrollTimeout = setTimeout(() => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
+            lastScrollTop = scrollTop;
+
+            if (itinerarySection) {
                 const rect = itinerarySection.getBoundingClientRect();
-                
-                if (window.innerWidth <= 768 && 
-                    rect.top <= 0 && 
-                    rect.bottom >= 0) {
-                    dayIndicator.style.display = 'block';
-                    
-                    // Find which day card is most visible
-                    let mostVisibleCard = null;
-                    let maxVisibleHeight = 0;
-                    
-                    dayCards.forEach((card, index) => {
+                if (rect.top <= 0 && rect.bottom >= 0) {
+                    dayCards.forEach(card => {
                         const cardRect = card.getBoundingClientRect();
-                        const visibleHeight = Math.min(cardRect.bottom, window.innerHeight) - 
-                                             Math.max(cardRect.top, 0);
-                        
-                        if (visibleHeight > maxVisibleHeight) {
-                            maxVisibleHeight = visibleHeight;
-                            mostVisibleCard = card;
+                        if (cardRect.top <= window.innerHeight / 2 && cardRect.bottom >= window.innerHeight / 2) {
+                            const dayNumber = card.querySelector('h3').textContent.match(/\d+/)[0];
+                            dayIndicator.textContent = `Day ${dayNumber}`;
+                            dayIndicator.style.display = 'block';
                         }
                     });
-                    
-                    if (mostVisibleCard) {
-                        const dayTitle = mostVisibleCard.querySelector('h3').textContent;
-                        dayIndicator.textContent = dayTitle.split(' - ')[0]; // Just the "Day X" part
-                    }
                 } else {
                     dayIndicator.style.display = 'none';
                 }
+            }
+        }, 100);
+    });
+
+    // Add touch events for smoother scrolling
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    document.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+    });
+
+    document.addEventListener('touchend', (e) => {
+        const touchEndY = e.changedTouches[0].clientY;
+        const touchEndTime = Date.now();
+        const distance = touchEndY - touchStartY;
+        const duration = touchEndTime - touchStartTime;
+        const velocity = Math.abs(distance / duration);
+
+        if (velocity > 0.5) {
+            const scrollAmount = distance * 2;
+            window.scrollBy({
+                top: -scrollAmount,
+                behavior: 'smooth'
             });
         }
-    }
+    });
 }
 
 // Setup section animations on scroll
