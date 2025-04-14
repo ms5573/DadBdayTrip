@@ -63,10 +63,7 @@ function setupNavHighlighting() {
 // Setup mobile navigation menu
 function setupMobileNav() {
     const nav = document.querySelector('nav');
-    const dayIndicator = document.createElement('div');
-    dayIndicator.className = 'day-indicator';
-    document.body.appendChild(dayIndicator);
-
+    
     // Create mobile menu button
     const menuButton = document.createElement('button');
     menuButton.className = 'mobile-menu-button';
@@ -85,40 +82,6 @@ function setupMobileNav() {
             nav.classList.remove('mobile-menu-open');
             menuButton.innerHTML = '☰';
         }
-    });
-
-    // Update day indicator based on scroll position
-    let lastScrollTop = 0;
-    let scrollTimeout;
-    const itinerarySection = document.getElementById('itinerary');
-    const dayCards = document.querySelectorAll('.day-card');
-
-    window.addEventListener('scroll', () => {
-        if (scrollTimeout) {
-            clearTimeout(scrollTimeout);
-        }
-
-        scrollTimeout = setTimeout(() => {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
-            lastScrollTop = scrollTop;
-
-            if (itinerarySection) {
-                const rect = itinerarySection.getBoundingClientRect();
-                if (rect.top <= 0 && rect.bottom >= 0) {
-                    dayCards.forEach(card => {
-                        const cardRect = card.getBoundingClientRect();
-                        if (cardRect.top <= window.innerHeight / 2 && cardRect.bottom >= window.innerHeight / 2) {
-                            const dayNumber = card.querySelector('h3').textContent.match(/\d+/)[0];
-                            dayIndicator.textContent = `Day ${dayNumber}`;
-                            dayIndicator.style.display = 'block';
-                        }
-                    });
-                } else {
-                    dayIndicator.style.display = 'none';
-                }
-            }
-        }, 100);
     });
 
     // Add touch events for smoother scrolling
