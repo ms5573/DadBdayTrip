@@ -1201,6 +1201,37 @@ footer {
     padding-left: var(--space-md);
 }
 
+.intro-text p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.intro-text ul {
+    list-style: none;
+    padding-left: 0.5rem;
+    margin-bottom: var(--space-md);
+}
+
+.intro-text li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.7rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.intro-text li:before {
+    content: "•";
+    color: var(--aka);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.intro-text li strong {
+    color: var(--aka);
+}
+
 .option-divider {
     margin: var(--space-lg) 0;
     border: 0;
@@ -1210,20 +1241,32 @@ footer {
 
 .intro-image {
     flex: 1;
-    margin-top: var(--space-lg);
+    position: sticky;
+    top: 80px;
+    align-self: flex-start;
+    margin-left: var(--space-md);
+    max-width: 300px;
 }
 
 #dad-photo {
     width: 100%;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease;
+    border: 4px solid white;
+}
+
+#dad-photo:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 .image-caption {
     text-align: center;
     font-style: italic;
     margin-top: var(--space-sm);
+    color: var(--kuro);
+    font-size: 0.9rem;
 }
 
 @media (max-width: 768px) {
@@ -1232,7 +1275,10 @@ footer {
     }
 
     .intro-image {
-        margin-top: var(--space-md);
+        position: static;
+        width: 70%;
+        max-width: none;
+        margin: var(--space-md) auto;
     }
 }
 
@@ -1635,4 +1681,11 @@ nav {
     .current-day-info span {
         font-size: 0.8rem;
     }
+}
+
+/* Japanese characters styling */
+.jp {
+    margin-right: 0.5rem;
+    color: var(--aka);
+    font-weight: 500;
 }
