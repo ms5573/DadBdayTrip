@@ -456,7 +456,7 @@ function convertToClickableLinks(text) {
     const linkPattern = /(.+?)(\s+[-–—]\s+)(https?:\/\/[^\s]+)/g;
     
     return text.replace(linkPattern, (match, label, separator, url) => {
-        // Return the label wrapped in an anchor tag
+        // Return just the label as a clickable link
         return `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`;
     });
 }
