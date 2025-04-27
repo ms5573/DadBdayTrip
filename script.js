@@ -1,13 +1,16 @@
 // Initialize the website functionality
-document.addEventListener('DOMContentLoaded', function() {
+function initializeWebsite() {
     console.log('Robert\'s Japan Trip website loaded');
-    
-    // Single initialization of all components
-    initializeWebsite();
-    
-    // Initialize the map separately after other components
-    initMap();
-});
+    loadItineraryData();
+    setupNavigation();
+    setupMobileNav();
+    setupSectionAnimations();
+    setupParallax();
+    setupBackToTopButton();
+}
+
+// Initialize everything when the DOM is loaded
+document.addEventListener('DOMContentLoaded', initializeWebsite);
 
 // Smooth scrolling implementation
 function implementSmoothScrolling() {
@@ -161,217 +164,340 @@ function setupParallax() {
     });
 }
 
-// Placeholder for future itinerary data loading
-function loadItineraryData() {
-    // This would fetch data from a JSON file or API
-    console.log('Itinerary data would load here');
-}
+// Itinerary data store
+let itineraryData = {
+    option1: null,
+    option2: null,
+    option1_de: null,
+    option2_de: null,
+    activeOption: 'option1',
+    activeLanguage: 'en'
+};
 
-// Placeholder for future photo gallery functionality
-function setupGallery() {
-    // This would handle the photo gallery functionality
-    console.log('Photo gallery would display here');
-}
+// Fetch and initialize itinerary data
+async function loadItineraryData() {
+    try {
+        console.log('Loading itinerary data from JSON files...');
+        console.log('Fetching option1.json, option2.json, option1-de.json, and option2-de.json');
 
-// Initialize the map with trip locations
-let japanMap; // Global variable to track if map is initialized
-function initMap() {
-    // Check if map is already initialized
-    if (japanMap) {
-        console.log('Map already initialized, skipping...');
-        return;
-    }
-    
-    const mapContainer = document.getElementById('japan-trip-map');
-    if (!mapContainer) {
-        console.error('Map container not found');
-        return;
-    }
-    
-    // Create map centered on Japan with adjusted zoom level for better overview
-    japanMap = L.map('japan-trip-map').setView([36.2048, 138.2529], 6);
-    
-    // Add a cleaner tile layer with less detail
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        maxZoom: 18
-    }).addTo(japanMap);
-    
-    // Simplified custom icons for different types of locations
-    const icons = {
-        start: L.divIcon({
-            className: 'custom-marker start-marker',
-            html: '<div class="marker-dot"></div><div class="pulse"></div>',
-            iconSize: [24, 24],
-            iconAnchor: [12, 12]
-        }),
-        destination: L.divIcon({
-            className: 'custom-marker destination-marker',
-            html: '<div class="marker-dot"></div>',
-            iconSize: [20, 20],
-            iconAnchor: [10, 10]
-        }),
-        dayTrip: L.divIcon({
-            className: 'custom-marker day-trip-marker',
-            html: '<div class="marker-dot"></div>',
-            iconSize: [16, 16],
-            iconAnchor: [8, 8]
-        }),
-        end: L.divIcon({
-            className: 'custom-marker end-marker',
-            html: '<div class="marker-dot"></div><div class="pulse"></div>',
-            iconSize: [24, 24],
-            iconAnchor: [12, 12]
-        })
-    };
-    
-    // Define key locations from the itinerary with clear English names
-    const locations = [
-        {
-            name: "Tokyo (Start)",
-            coords: [35.6762, 139.6503],
-            days: [1, 2, 3],
-            type: "start",
-            description: "Days 1-3: Exploring Asakusa, Ginza, Meiji Shrine, Harajuku and Shibuya"
-        },
-        {
-            name: "Yokohama",
-            coords: [35.4437, 139.6380],
-            days: [4, 5],
-            type: "destination",
-            description: "Days 4-5: Visiting Kamakura and celebrating Robert's 70th birthday"
-        },
-        {
-            name: "Hakone",
-            coords: [35.2323, 139.1071],
-            days: [6, 7],
-            type: "destination",
-            description: "Days 6-7: Hot springs (onsen), Lake Ashi cruise and Mt. Fuji views"
-        },
-        {
-            name: "Kyoto",
-            coords: [35.0116, 135.7681],
-            days: [8, 9, 10, 11],
-            type: "destination",
-            description: "Days 8-11: Historic temples, bamboo grove, and traditional culture"
-        },
-        {
-            name: "Himeji",
-            coords: [34.8397, 134.6937],
-            days: [12],
-            type: "destination",
-            description: "Day 12: Visit to Japan's most spectacular feudal castle"
-        },
-        {
-            name: "Hiroshima",
-            coords: [34.3853, 132.4553],
-            days: [12, 13],
-            type: "destination",
-            description: "Days 12-13: Peace Memorial Park and Museum"
-        },
-        {
-            name: "Kanazawa",
-            coords: [36.5626, 136.6562],
-            days: [14, 15],
-            type: "destination",
-            description: "Days 14-15: Kenroku-en Garden, samurai district, and traditional crafts"
-        },
-        {
-            name: "Tokyo (End)",
-            coords: [35.6762, 139.6503],
-            days: [16, 17, 18],
-            type: "end",
-            description: "Days 16-18: Final shopping, farewell dinner, and departure"
-        }
-    ];
-    
-    // Only include the most significant day trips
-    const dayTrips = [
-        {
-            name: "Nara",
-            coords: [34.6851, 135.8048],
-            days: [11],
-            type: "dayTrip",
-            fromLocation: "Kyoto",
-            description: "Day 11: Famous deer park and Todai-ji Temple with giant Buddha"
-        },
-        {
-            name: "Miyajima",
-            coords: [34.2962, 132.3194],
-            days: [13],
-            type: "dayTrip",
-            fromLocation: "Hiroshima",
-            description: "Day 13: Island with iconic floating torii gate"
-        }
-    ];
-    
-    // Combine all locations for display
-    const allLocations = [...locations, ...dayTrips];
-    
-    // Add markers and popups for each location
-    const markers = {};
-    allLocations.forEach(location => {
-        const icon = icons[location.type];
-        const marker = L.marker(location.coords, { icon: icon }).addTo(japanMap);
+        const promises = [
+            fetch('data/option1.json').then(response => {
+                console.log('option1.json response status:', response.status);
+                return response;
+            }),
+            fetch('data/option2.json').then(response => {
+                console.log('option2.json response status:', response.status);
+                return response;
+            }),
+            fetch('data/option1-de.json').then(response => {
+                console.log('option1-de.json response status:', response.status);
+                return response;
+            }).catch(err => {
+                console.warn('Error fetching option1-de.json:', err);
+                return { json: () => ({ }) };
+            }),
+            fetch('data/option2-de.json').then(response => {
+                console.log('option2-de.json response status:', response.status);
+                return response;
+            }).catch(err => {
+                console.warn('Error fetching option2-de.json:', err);
+                return { json: () => ({ }) };
+            })
+        ];
+
+        const [option1Response, option2Response, option1DeResponse, option2DeResponse] = await Promise.all(promises);
         
-        // Add text label for main destinations
-        if (location.type !== "dayTrip") {
-            L.marker(location.coords, {
-                icon: L.divIcon({
-                    className: 'map-label',
-                    html: `<div>${location.name}</div>`,
-                    iconSize: [100, 20],
-                    iconAnchor: [50, -10]
-                })
-            }).addTo(japanMap);
+        console.log('All JSON responses received');
+        
+        try {
+            itineraryData.option1 = await option1Response.json();
+            console.log('option1 data loaded with', itineraryData.option1.length, 'days');
+        } catch (e) {
+            console.error('Failed to parse option1.json:', e);
+            itineraryData.option1 = [];
+        }
+
+        try {
+            itineraryData.option2 = await option2Response.json();
+            console.log('option2 data loaded with', itineraryData.option2.length, 'days');
+        } catch (e) {
+            console.error('Failed to parse option2.json:', e);
+            itineraryData.option2 = [];
         }
         
-        // Create simplified popup content
-        const dayLabels = location.days.map(day => `<span class="day-label">Day ${day}</span>`).join(' ');
-        const popupContent = `
-            <div class="map-popup">
-                <h3>${location.name}</h3>
-                <p>${dayLabels}</p>
-                <p>${location.description}</p>
+        // Load German data if available
+        try {
+            itineraryData.option1_de = await option1DeResponse.json();
+            console.log('option1_de data loaded with', itineraryData.option1_de.length, 'days');
+        } catch (e) {
+            console.warn('Could not load option1-de.json data:', e);
+            itineraryData.option1_de = null;
+        }
+        
+        try {
+            itineraryData.option2_de = await option2DeResponse.json();
+            console.log('option2_de data loaded with', itineraryData.option2_de.length, 'days');
+        } catch (e) {
+            console.warn('Could not load option2-de.json data:', e);
+            itineraryData.option2_de = null;
+        }
+        
+        console.log('Itinerary data loaded:', {
+            option1: itineraryData.option1 ? itineraryData.option1.length : 0,
+            option2: itineraryData.option2 ? itineraryData.option2.length : 0,
+            option1_de: itineraryData.option1_de ? itineraryData.option1_de.length : 0,
+            option2_de: itineraryData.option2_de ? itineraryData.option2_de.length : 0
+        });
+        
+        // Initialize with first option by default
+        const currentData = getCurrentItineraryData();
+        console.log('Current itinerary data has', currentData.length, 'days');
+        
+        renderItinerary(currentData);
+        
+        // Set up the option toggle buttons
+        setupItineraryOptions();
+        setupLanguageOptions();
+        
+        // Initialize map with the active option data
+        initMap(currentData);
+    } catch (error) {
+        console.error('Error loading itinerary data:', error);
+    }
+}
+
+// Get the current itinerary data based on active option and language
+function getCurrentItineraryData() {
+    const { activeOption, activeLanguage } = itineraryData;
+    
+    if (activeLanguage === 'de') {
+        const langOption = `${activeOption}_de`;
+        if (itineraryData[langOption]) {
+            return normalizeItineraryData(itineraryData[langOption]);
+        }
+    }
+    
+    return normalizeItineraryData(itineraryData[activeOption]);
+}
+
+// Normalize itinerary data to handle different formats
+function normalizeItineraryData(data) {
+    if (!data || !Array.isArray(data)) return [];
+    
+    return data.map(day => {
+        // Handle old format (with highlights as string and links in notes)
+        if (typeof day.highlights === 'string') {
+            const normalizedDay = {
+                ...day,
+                highlights: day.highlights ? day.highlights.split(';').map(h => h.trim()) : [],
+                helpfulLinks: []
+            };
+            
+            // Extract URLs from notes if present
+            if (day.notes && day.notes.includes('http')) {
+                normalizedDay.helpfulLinks.push(day.notes);
+            }
+            
+            // Extract URLs from hotel if present
+            if (day.hotel && day.hotel.includes('http')) {
+                normalizedDay.helpfulLinks.push(day.hotel);
+            }
+            
+            return normalizedDay;
+        }
+        
+        // Handle new format (with highlights as array and helpfulLinks)
+        return day;
+    });
+}
+
+// Switch between itinerary options
+function switchItineraryOption(option) {
+    console.log('Switching to option:', option);
+    if (option !== itineraryData.activeOption) {
+        itineraryData.activeOption = option;
+        
+        // Get updated itinerary data with new option
+        const newData = getCurrentItineraryData();
+        console.log('New itinerary data has', newData.length, 'days');
+        
+        // Render with new data
+        renderItinerary(newData);
+        
+        // Clear existing map and reinitialize with new data
+        const mapContainer = document.getElementById('japan-trip-map');
+        if (mapContainer) {
+            mapContainer.innerHTML = '';
+            initMap(newData);
+        }
+        
+        // Update active button styles
+        document.querySelectorAll('.route-options .option-button').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.option === option);
+        });
+    }
+}
+
+// Switch between languages
+function switchLanguage(language) {
+    console.log('Switching to language:', language);
+    if (language !== itineraryData.activeLanguage) {
+        itineraryData.activeLanguage = language;
+        
+        // Get updated itinerary data with new language
+        const newData = getCurrentItineraryData();
+        console.log('New language data has', newData.length, 'days');
+        
+        // Render with new data
+        renderItinerary(newData);
+        
+        // Update active button styles
+        document.querySelectorAll('.language-options .lang-button').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.lang === language);
+        });
+    }
+}
+
+// Setup itinerary option buttons
+function setupItineraryOptions() {
+    console.log('Setting up itinerary options');
+    const optionButtons = document.querySelectorAll('.route-options .option-button');
+    
+    optionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            console.log('Option button clicked:', this.dataset.option);
+            const option = this.dataset.option;
+            switchItineraryOption(option);
+        });
+        
+        // Set initial active state
+        button.classList.toggle('active', button.dataset.option === itineraryData.activeOption);
+    });
+}
+
+// Setup language options
+function setupLanguageOptions() {
+    console.log('Setting up language options');
+    const langButtons = document.querySelectorAll('.language-options .lang-button');
+    
+    langButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            console.log('Language button clicked:', this.dataset.lang);
+            const language = this.dataset.lang;
+            switchLanguage(language);
+        });
+        
+        // Set initial active state
+        button.classList.toggle('active', button.dataset.lang === itineraryData.activeLanguage);
+    });
+}
+
+// Render the itinerary from the data
+function renderItinerary(data) {
+    const itinerarySection = document.querySelector('.itinerary-content');
+    if (!itinerarySection || !data) return;
+    
+    console.log('Rendering itinerary with data:', data);
+    
+    // Clear existing content
+    itinerarySection.innerHTML = '';
+    
+    // Create day selectors
+    const daySelector = document.createElement('div');
+    daySelector.className = 'day-selector';
+    
+    // Create day cards container
+    const dayCards = document.createElement('div');
+    dayCards.className = 'day-cards';
+    
+    // Populate data
+    data.forEach((day, index) => {
+        // Create day button
+        const dayButton = document.createElement('button');
+        dayButton.className = 'day-button';
+        dayButton.textContent = `Day ${day.day}`;
+        dayButton.dataset.day = day.day;
+        daySelector.appendChild(dayButton);
+        
+        // Create day card
+        const dayCard = document.createElement('div');
+        dayCard.className = 'day-card';
+        dayCard.dataset.day = day.day;
+        dayCard.style.display = index === 0 ? 'block' : 'none';
+        
+        // Ensure highlights is an array
+        const highlights = Array.isArray(day.highlights) ? day.highlights : 
+                          (typeof day.highlights === 'string' ? day.highlights.split(';').map(h => h.trim()) : []);
+        
+        // Card content with improved design
+        dayCard.innerHTML = `
+            <div class="day-header">
+                <div class="day-header-left">
+                    <h3>Day ${day.day}${day.date ? `: ${day.date}` : ''}</h3>
+                    <h4 class="day-title">${day.title}</h4>
+                </div>
+                <div class="day-header-right">
+                    ${day.km ? `<span class="travel-stat"><i class="travel-icon">↔️</i>${day.km} km</span>` : ''}
+                    ${day.time ? `<span class="travel-stat"><i class="travel-icon">⏱️</i>${day.time}</span>` : ''}
+                </div>
+            </div>
+            <div class="day-content">
+                <div class="day-details">
+                    ${day.notes ? `<p class="notes">${day.notes}</p>` : ''}
+                    
+                    ${day.helpfulInfo ? `
+                    <div class="helpful-info-section">
+                        <h5>Helpful Tips</h5>
+                        <p>${day.helpfulInfo}</p>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="collapsible-section">
+                        <div class="collapsible-trigger">
+                            <h5>Highlights</h5>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="collapsible-content">
+                            <ul class="highlights-list">
+                                ${highlights.map(highlight => `<li>${highlight}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    ${day.helpfulLinks && day.helpfulLinks.length ? `
+                    <div class="collapsible-section">
+                        <div class="collapsible-trigger">
+                            <h5>Helpful Links</h5>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="collapsible-content">
+                            <ul class="links-list">
+                                ${day.helpfulLinks.map(link => `<li>${link}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    ${day.hotel ? `
+                    <div class="hotel-info">
+                        <h5>Accommodation</h5>
+                        <p>${day.hotel}</p>
+                    </div>
+                    ` : ''}
+                </div>
             </div>
         `;
         
-        marker.bindPopup(popupContent);
-        markers[location.name] = marker;
+        dayCards.appendChild(dayCard);
     });
     
-    // Draw simplified main route line with more subtle styling
-    const mainRouteCoords = locations.map(loc => loc.coords);
+    // Add elements to the page
+    itinerarySection.appendChild(daySelector);
+    itinerarySection.appendChild(dayCards);
     
-    const mainRoute = L.polyline(mainRouteCoords, {
-        color: '#e91e63',
-        weight: 2,
-        opacity: 0.5,
-        dashArray: '5, 10',
-        lineCap: 'round'
-    }).addTo(japanMap);
-    
-    // Draw selected day trip routes with even more subtle styling
-    dayTrips.forEach(dayTrip => {
-        const fromDestination = locations.find(loc => loc.name === dayTrip.fromLocation);
-        
-        if (fromDestination) {
-            L.polyline([fromDestination.coords, dayTrip.coords], {
-                color: '#2196F3',
-                weight: 1.5,
-                opacity: 0.4,
-                dashArray: '3, 6',
-                lineCap: 'round'
-            }).addTo(japanMap);
-        }
-    });
-    
-    // Ensure map fits all locations
-    const bounds = L.latLngBounds(allLocations.map(loc => loc.coords));
-    japanMap.fitBounds(bounds, {
-        padding: [30, 30],
-        maxZoom: 7
-    });
+    // Set up event listeners for the day buttons and collapsible sections
+    setupDaySelectors();
+    setupCollapsibleSections();
 }
 
 // Add the missing setupNavigation function
@@ -424,19 +550,10 @@ function setupNavigation() {
     });
 }
 
-// Connect all the initialization code in one function
-function initializeWebsite() {
-    setupNavigation();
-    setupDaySelectors();
-    setupCollapsibleSections();
-    setupSectionAnimations();
-    setupBackToTopButton();
-    setupMobileNav(); // Add mobile navigation setup
-}
-
 // Add setupDaySelectors function
 function setupDaySelectors() {
-    const dayButtons = document.querySelectorAll('.day-buttons button');
+    // Fix the day button selector to match what's actually being created in renderItinerary
+    const dayButtons = document.querySelectorAll('.day-selector .day-button');
     const dayCards = document.querySelectorAll('.day-card');
     
     // Create mobile-specific navigation for itinerary
@@ -449,7 +566,7 @@ function setupDaySelectors() {
     if (dayCards.length > 0 && dayButtons.length > 0) {
         dayCards.forEach((card, index) => {
             if (index === 0) {
-                card.style.display = 'flex';
+                card.style.display = 'block';
                 dayButtons[0].classList.add('active');
             } else {
                 card.style.display = 'none';
@@ -461,7 +578,7 @@ function setupDaySelectors() {
     dayButtons.forEach(button => {
         button.addEventListener('click', function() {
             // Get the day number from data attribute
-            const dayNumber = this.getAttribute('data-day');
+            const dayNumber = this.dataset.day;
             
             // Remove active class from all buttons
             dayButtons.forEach(btn => btn.classList.remove('active'));
@@ -477,7 +594,7 @@ function setupDaySelectors() {
             // Show the corresponding day card
             const targetCard = document.querySelector(`.day-card[data-day="${dayNumber}"]`);
             if (targetCard) {
-                targetCard.style.display = 'flex';
+                targetCard.style.display = 'block';
                 
                 // Scroll to day card for better user experience
                 const headerOffset = 70; // Account for fixed header
@@ -520,10 +637,10 @@ function setupDaySelectors() {
     
     function handleSwipe() {
         // Only process swipe if we're viewing a day card
-        const currentDay = document.querySelector('.day-buttons button.active');
+        const currentDay = document.querySelector('.day-selector .day-button.active');
         if (!currentDay) return;
         
-        const dayNumber = parseInt(currentDay.getAttribute('data-day'));
+        const dayNumber = parseInt(currentDay.dataset.day);
         if (isNaN(dayNumber)) return;
         
         // Calculate swipe distance
@@ -533,13 +650,13 @@ function setupDaySelectors() {
         if (swipeDistance > swipeThreshold) {
             // Swipe right -> go to previous day
             if (dayNumber > 1) {
-                const prevButton = document.querySelector(`.day-buttons button[data-day="${dayNumber - 1}"]`);
+                const prevButton = document.querySelector(`.day-selector .day-button[data-day="${dayNumber - 1}"]`);
                 if (prevButton) prevButton.click();
             }
         } else if (swipeDistance < -swipeThreshold) {
             // Swipe left -> go to next day
             if (dayNumber < 18) {
-                const nextButton = document.querySelector(`.day-buttons button[data-day="${dayNumber + 1}"]`);
+                const nextButton = document.querySelector(`.day-selector .day-button[data-day="${dayNumber + 1}"]`);
                 if (nextButton) nextButton.click();
             }
         }
@@ -547,9 +664,9 @@ function setupDaySelectors() {
     
     // Auto-scroll day selector to show active day
     function scrollDayButtonIntoView(dayNumber) {
-        const dayButton = document.querySelector(`.day-buttons button[data-day="${dayNumber}"]`);
+        const dayButton = document.querySelector(`.day-selector .day-button[data-day="${dayNumber}"]`);
         if (dayButton) {
-            const buttonContainer = document.querySelector('.day-buttons');
+            const buttonContainer = document.querySelector('.day-selector');
             const buttonRect = dayButton.getBoundingClientRect();
             const containerRect = buttonContainer.getBoundingClientRect();
             
@@ -569,9 +686,9 @@ function setupDaySelectors() {
     
     // Center active day button when page loads (desktop only)
     if (!isMobile) {
-        const activeButton = document.querySelector('.day-buttons button.active');
+        const activeButton = document.querySelector('.day-selector .day-button.active');
         if (activeButton) {
-            const dayNumber = activeButton.getAttribute('data-day');
+            const dayNumber = activeButton.dataset.day;
             scrollDayButtonIntoView(dayNumber);
         }
     }
@@ -579,7 +696,7 @@ function setupDaySelectors() {
     // Modify the createMobileItineraryNav function to improve the layout
     function createMobileItineraryNav(dayButtons, dayCards) {
         // Hide the original day buttons on mobile
-        const dayButtonsContainer = document.querySelector('.day-buttons');
+        const dayButtonsContainer = document.querySelector('.day-selector');
         if (dayButtonsContainer) {
             dayButtonsContainer.classList.add('desktop-only');
         }
@@ -615,7 +732,7 @@ function setupDaySelectors() {
         // Add event listener to day selector
         daySelector.addEventListener('change', function() {
             const selectedDay = this.value;
-            const dayButton = document.querySelector(`.day-buttons button[data-day="${selectedDay}"]`);
+            const dayButton = document.querySelector(`.day-selector .day-button[data-day="${selectedDay}"]`);
             if (dayButton) {
                 dayButton.click();
             }
@@ -623,23 +740,23 @@ function setupDaySelectors() {
         
         // Add event listeners to prev/next buttons
         prevButton.addEventListener('click', function() {
-            const currentDay = document.querySelector('.day-buttons button.active');
+            const currentDay = document.querySelector('.day-selector .day-button.active');
             if (!currentDay) return;
             
             const dayNumber = parseInt(currentDay.getAttribute('data-day'));
             if (dayNumber > 1) {
-                const prevButton = document.querySelector(`.day-buttons button[data-day="${dayNumber - 1}"]`);
+                const prevButton = document.querySelector(`.day-selector .day-button[data-day="${dayNumber - 1}"]`);
                 if (prevButton) prevButton.click();
             }
         });
         
         nextButton.addEventListener('click', function() {
-            const currentDay = document.querySelector('.day-buttons button.active');
+            const currentDay = document.querySelector('.day-selector .day-button.active');
             if (!currentDay) return;
             
             const dayNumber = parseInt(currentDay.getAttribute('data-day'));
             if (dayNumber < dayButtons.length) {
-                const nextButton = document.querySelector(`.day-buttons button[data-day="${dayNumber + 1}"]`);
+                const nextButton = document.querySelector(`.day-selector .day-button[data-day="${dayNumber + 1}"]`);
                 if (nextButton) nextButton.click();
             }
         });
@@ -697,7 +814,7 @@ function setupDaySelectors() {
             createMobileItineraryNav(dayButtons, dayCards);
         } else if (!isMobile && mobileNavExists) {
             mobileNavExists.remove();
-            const dayButtonsContainer = document.querySelector('.day-buttons');
+            const dayButtonsContainer = document.querySelector('.day-selector');
             if (dayButtonsContainer) {
                 dayButtonsContainer.classList.remove('desktop-only');
             }
@@ -714,17 +831,19 @@ function setupCollapsibleSections() {
             this.classList.toggle('active');
             const content = this.nextElementSibling;
             
-            if (content.style.display === 'block') {
-                content.style.display = 'none';
+            if (this.classList.contains('active')) {
+                // Get the scrollHeight to properly animate the max-height
+                const contentHeight = content.scrollHeight;
+                content.style.maxHeight = contentHeight + 'px';
             } else {
-                content.style.display = 'block';
+                content.style.maxHeight = '0';
             }
         });
     });
 
     // Hide all collapsible content initially
     document.querySelectorAll('.collapsible-content').forEach(content => {
-        content.style.display = 'none';
+        content.style.maxHeight = '0';
     });
 }
 
@@ -749,5 +868,161 @@ function setupBackToTopButton() {
                 behavior: 'smooth'
             });
         });
+    }
+}
+
+// Add the missing initMap function
+function initMap(itineraryData) {
+    console.log('Initializing map with data', itineraryData);
+    const mapContainer = document.getElementById('japan-trip-map');
+    if (!mapContainer) {
+        console.warn('Map container not found');
+        return;
+    }
+    
+    if (!itineraryData || !itineraryData.length) {
+        console.warn('No itinerary data available for map');
+        return;
+    }
+    
+    // Check if Leaflet is available
+    if (typeof L === 'undefined') {
+        console.error('Leaflet library not available');
+        return;
+    }
+    
+    // Center of Japan
+    const JAPAN_CENTER = [36.2048, 138.2529];
+    const JAPAN_ZOOM = 5;
+    
+    // Create map and set initial view
+    const map = L.map(mapContainer).setView(JAPAN_CENTER, JAPAN_ZOOM);
+    
+    // Add tile layer (map background)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18
+    }).addTo(map);
+    
+    // Create custom marker icons
+    const createCustomIcon = (type) => {
+        return L.divIcon({
+            className: `custom-marker ${type}-marker`,
+            html: `<div class="marker-dot"></div>${type !== 'day-trip' ? '<div class="pulse"></div>' : ''}`,
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
+        });
+    };
+    
+    // Icons for different types of locations
+    const startIcon = createCustomIcon('start');
+    const destinationIcon = createCustomIcon('destination');
+    const dayTripIcon = createCustomIcon('day-trip');
+    const endIcon = createCustomIcon('end');
+    
+    // Extract location data from itinerary
+    const locations = [];
+    const markers = [];
+    const locationMap = {};
+    
+    itineraryData.forEach(day => {
+        // Skip if no coordinates
+        if (!day.lat || !day.lng) return;
+        
+        // Create a unique key for this location
+        const locationKey = `${day.lat},${day.lng}`;
+        
+        // If we haven't seen this location before, add it
+        if (!locationMap[locationKey]) {
+            const locationType = day.day === 1 ? 'start' : 
+                                day.day === itineraryData.length ? 'end' : 
+                                'destination';
+            
+            locationMap[locationKey] = {
+                lat: day.lat,
+                lng: day.lng,
+                days: [day.day],
+                type: locationType,
+                name: day.title.split('–').pop().trim(),
+                description: day.notes
+            };
+            
+            locations.push(locationMap[locationKey]);
+        } else {
+            // If we've seen this location before, just add this day to it
+            locationMap[locationKey].days.push(day.day);
+        }
+    });
+    
+    // Add markers for each location
+    locations.forEach(location => {
+        const icon = location.type === 'start' ? startIcon :
+                     location.type === 'end' ? endIcon :
+                     location.type === 'day-trip' ? dayTripIcon :
+                     destinationIcon;
+        
+        const marker = L.marker([location.lat, location.lng], { icon: icon }).addTo(map);
+        
+        // Create popup content
+        const popupContent = `
+            <div class="map-popup">
+                <h3>${location.name}</h3>
+                <p>${location.description}</p>
+                <p><strong>Visit:</strong> Day${location.days.length > 1 ? 's' : ''} ${location.days.join(', ')}</p>
+            </div>
+        `;
+        
+        marker.bindPopup(popupContent);
+        markers.push(marker);
+    });
+    
+    // Draw route lines connecting destinations
+    const mainDestinations = locations.filter(loc => loc.type !== 'day-trip');
+    if (mainDestinations.length > 1) {
+        const routePoints = mainDestinations.map(loc => [loc.lat, loc.lng]);
+        const routeLine = L.polyline(routePoints, {
+            color: '#e91e63',
+            weight: 3,
+            opacity: 0.7,
+            dashArray: '5, 10'
+        }).addTo(map);
+    }
+    
+    // Draw lines for day trips
+    const dayTrips = locations.filter(loc => loc.type === 'day-trip');
+    dayTrips.forEach(trip => {
+        // Find the nearest main destination
+        let nearestDest = null;
+        let minDistance = Infinity;
+        
+        mainDestinations.forEach(dest => {
+            const distance = Math.sqrt(
+                Math.pow(trip.lat - dest.lat, 2) + 
+                Math.pow(trip.lng - dest.lng, 2)
+            );
+            
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestDest = dest;
+            }
+        });
+        
+        if (nearestDest) {
+            const tripLine = L.polyline(
+                [[trip.lat, trip.lng], [nearestDest.lat, nearestDest.lng]], 
+                {
+                    color: '#2196F3',
+                    weight: 2,
+                    opacity: 0.5,
+                    dashArray: '3, 6'
+                }
+            ).addTo(map);
+        }
+    });
+    
+    // Fit map to show all markers if we have any
+    if (markers.length > 0) {
+        const group = new L.featureGroup(markers);
+        map.fitBounds(group.getBounds(), { padding: [30, 30] });
     }
 }

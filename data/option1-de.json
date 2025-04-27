@@ -1,0 +1,200 @@
+[
+  {
+    "day": 1,
+    "date": null,
+    "title": "Flug nach Tokio",
+    "highlights": "",
+    "km": "",
+    "time": "",
+    "hotel": "Hilton Tokyo – Shinjuku – https://www3.hilton.com/en/hotels/japan/hilton-tokyo-HNDJHGI/index.html",
+    "notes": "Flug buchen: Skyscanner – https://www.skyscanner.com/",
+    "helpfulInfo": "Nutze den Narita Express (im JR‑Pass enthalten) nach Shinjuku (~75 Min.); schlendere abends durch Omoide Yokocho für Yakitori."
+  },
+  {
+    "day": 2,
+    "date": null,
+    "title": "Tokio",
+    "highlights": "Asakusa – https://www.japan-guide.com/e/e3001.html ; Ginza – https://www.japan-guide.com/e/e3005.html",
+    "km": "",
+    "time": "",
+    "hotel": "Hilton Tokyo – Shinjuku – https://www3.hilton.com/en/hotels/japan/hilton-tokyo-HNDJHGI/index.html",
+    "notes": "Metro-Pass: Tokyo Metro – https://www.tokyometro.jp/en/",
+    "helpfulInfo": "Sei um 08:00 Uhr am Sensō‑ji, um den Andrang zu vermeiden, und nimm danach die Sumida‑Flussfähre zu den Hama‑Rikyu‑Gärten."
+  },
+  {
+    "day": 3,
+    "date": null,
+    "title": "Tokio → Hakone",
+    "highlights": "Hakone Tozan Railway – https://www.hakone-tozan.co.jp/en/ ; Onsen Infos – https://www.japan-guide.com/e/e5200.html",
+    "km": "81",
+    "time": "1 Std. 39 Min",
+    "hotel": "Hilton Odawara Resort & Spa – https://www3.hilton.com/en/hotels/japan/hilton-odawara-resort-and-spa-ODARAHI/index.html",
+    "notes": "Freepass: Odakyu Hakone – https://www.odakyu.jp/english/passes/hakone/",
+    "helpfulInfo": "Reserviere den Hakone‑Freepass online; verstaue Gepäck in Schließfächern in Hakone‑Yumoto, bevor du in die Bergbahn steigst."
+  },
+  {
+    "day": 4,
+    "date": null,
+    "title": "Hakone",
+    "highlights": "Lake Ashi Cruise – https://www.japan-guide.com/e/e5208.html",
+    "km": "",
+    "time": "",
+    "hotel": "Hilton Odawara Resort & Spa – https://www3.hilton.com/en/hotels/japan/hilton-odawara-resort-and-spa-ODARAHI/index.html",
+    "notes": "",
+    "helpfulInfo": "Setz dich im Ropeway rechts für Fuji‑Blicke und koste die schwarzen Eier in Ōwakudani."
+  },
+  {
+    "day": 5,
+    "date": null,
+    "title": "Hakone → Kyoto",
+    "highlights": "Tōkaidō Shinkansen – https://global.jr-central.co.jp/en/high-speed-rail/tokaido/ ; Kyoto Highlights – https://www.japan-guide.com/e/e2158.html",
+    "km": "374",
+    "time": "1 Std. 43 Min",
+    "hotel": "Hilton Kyoto (Sanjo Kawaramachi) – https://www3.hilton.com/en/hotels/japan/hilton-kyoto-HANHKHI/index.html",
+    "notes": "Japan Rail Pass – https://japanrailpass.net/en/",
+    "helpfulInfo": "Schicke großes Gepäck voraus (¥2 200/Stück); Plätze D/E im Shinkansen bieten Fuji‑Sicht bis Shizuoka."
+  },
+  {
+    "day": 6,
+    "date": null,
+    "title": "Kyoto",
+    "highlights": "Higashiyama – https://www.japan-guide.com/e/e3918.html ; Gion (Geisha) – https://www.japan-guide.com/e/e3909.html ; Teezeremonie – https://www.japan-guide.com/e/e2095.html",
+    "km": "",
+    "time": "",
+    "hotel": "Hilton Kyoto (Sanjo Kawaramachi) – https://www3.hilton.com/en/hotels/japan/hilton-kyoto-HANHKHI/index.html",
+    "notes": "",
+    "helpfulInfo": "Beginne 06:00 Uhr am Kiyomizu‑dera für leere Veranda; buche eine 45‑minütige Teezeremonie in Gion online."
+  },
+  {
+    "day": 7,
+    "date": null,
+    "title": "Kyoto",
+    "highlights": "Arashiyama Bamboo Grove – https://www.japan-guide.com/e/e3912.html ; Kinkaku-ji (Golden Pavilion) – https://www.japan-guide.com/e/e3908.html",
+    "km": "",
+    "time": "",
+    "hotel": "Hilton Kyoto (Sanjo Kawaramachi) – https://www3.hilton.com/en/hotels/japan/hilton-kyoto-HANHKHI/index.html",
+    "notes": "",
+    "helpfulInfo": "Sei um 07:00 Uhr im Bambuswald Arashiyama; kaufe das Kombiticket für Tenryū‑ji Garten (¥800) am Nordtor."
+  },
+  {
+    "day": 8,
+    "date": null,
+    "title": "Kyoto",
+    "highlights": "Nara (Option) – https://www.japan-guide.com/e/e2165.html ; freie Erkundung Kyoto",
+    "km": "46",
+    "time": "43 Min",
+    "hotel": "Hilton Kyoto (Sanjo Kawaramachi) – https://www3.hilton.com/en/hotels/japan/hilton-kyoto-HANHKHI/index.html",
+    "notes": "",
+    "helpfulInfo": "Der Todaiji öffnet um 08:00 Uhr—füttere zuerst die Hirsche; abends Philosophenweg in Kyoto bei Sonnenuntergang."
+  },
+  {
+    "day": 9,
+    "date": null,
+    "title": "Kyoto → Hiroshima",
+    "highlights": "Shinkansen – https://global.jr-central.co.jp/en/high-speed-rail/tokaido/ ; Hiroshima Castle – https://www.japan-guide.com/e/e3404.html",
+    "km": "362",
+    "time": "1 Std. 36 Min",
+    "hotel": "Hilton Hiroshima – https://www3.hilton.com/en/hotels/japan/hilton-hiroshima-HROHIHI/index.html",
+    "notes": "",
+    "helpfulInfo": "Gepäck in Schließfächern (¥700) am Hiroshima‑Bahnhof verstauen; Peace Museum um 08:30 besuchen, da 11–14 Uhr Hauptandrang."
+  },
+  {
+    "day": 10,
+    "date": null,
+    "title": "Hiroshima",
+    "highlights": "Friedensmuseum – https://www.japan-guide.com/e/e3400.html ; Miyajima – https://www.japan-guide.com/e/e3401.html",
+    "km": "",
+    "time": "",
+    "hotel": "Hilton Hiroshima – https://www3.hilton.com/en/hotels/japan/hilton-hiroshima-HROHIHI/index.html",
+    "notes": "",
+    "helpfulInfo": "Prüfe die Gezeiten—das Torii von Miyajima ‚schwebt‘ rund zwei Stunden um Hochwasser; JR‑Fähre alle 15 Min., im Pass enthalten."
+  },
+  {
+    "day": 11,
+    "date": null,
+    "title": "Hiroshima → Kanazawa",
+    "highlights": "Kenroku-en Garden – https://www.japan-guide.com/e/e4201.html",
+    "km": "613",
+    "time": "3 Std. 35 Min",
+    "hotel": "Hyatt Centric Kanazawa – https://www.hyatt.com/en-US/hotel/japan/hyatt-centric-kanazawa/kanzh",
+    "notes": "",
+    "helpfulInfo": "Kenroku‑en ist vor 07:00 Uhr kostenlos; verbinde ihn über das Ishikawa‑Tor mit Kanazawa Castle; Loop‑Bus‑Tagespass (¥600)."
+  },
+  {
+    "day": 12,
+    "date": null,
+    "title": "Kanazawa",
+    "highlights": "Samurai-Viertel – https://www.japan-guide.com/e/e4200.html",
+    "km": "",
+    "time": "",
+    "hotel": "Hyatt Centric Kanazawa – https://www.hyatt.com/en-US/hotel/japan/hyatt-centric-kanazawa/kanzh",
+    "notes": "",
+    "helpfulInfo": "Besichtige im Samurai‑Viertel Nagamachi das Nomura‑Haus (deutscher Audioguide verfügbar); Goldblatt‑Eis in Higashi‑Chaya probieren."
+  },
+  {
+    "day": 13,
+    "date": null,
+    "title": "Kanazawa → Tokio",
+    "highlights": "Shinkansen – https://global.jr-central.co.jp/en/high-speed-rail/tokaido/ ; Shinjuku Gyoen – https://www.env.go.jp/garden/shinjukugyoen/english/index.html",
+    "km": "474",
+    "time": "5 Std. 54 Min",
+    "hotel": "Hilton Tokyo – Shinjuku – https://www3.hilton.com/en/hotels/japan/hilton-tokyo-HNDJHGI/index.html",
+    "notes": "",
+    "helpfulInfo": "Fensterplatz im Kagayaki‑Shinkansen für Meerblick sichern; schicke Koffer per Yamato ins Flughafenhotel."
+  },
+  {
+    "day": 14,
+    "date": null,
+    "title": "Tokio",
+    "highlights": "Meiji-Schrein – https://www.japan-guide.com/e/e3002.html ; Harajuku – https://www.japan-guide.com/e/e3006.html ; Shibuya – https://www.japan-guide.com/e/e3007.html",
+    "km": "",
+    "time": "",
+    "hotel": "Hilton Tokyo – Shinjuku – https://www3.hilton.com/en/hotels/japan/hilton-tokyo-HNDJHGI/index.html",
+    "notes": "",
+    "helpfulInfo": "Meiji‑Schrein ab Morgengrauen; nach Harajuku‑Crepes Shibuya Sky zum Sonnenuntergang vorbuchen."
+  },
+  {
+    "day": 15,
+    "date": null,
+    "title": "Tokio → Kanagawa",
+    "highlights": "Kamakura-Tempel – https://www.japan-guide.com/e/e2163.html ; Yokohama – https://www.japan-guide.com/e/e3200.html",
+    "km": "52/42",
+    "time": "34/31 Min",
+    "hotel": "Hilton Yokohama – https://www3.hilton.com/en/hotels/japan/hilton-yokohama-YOKAHHI/index.html",
+    "notes": "Hafen-Cruise: Yokohama Harbour Cruise – https://www.yokohamajapan.com/v/harbor-cruise",
+    "helpfulInfo": "Für ¥50 in die Kamakura‑Buddha‑Statue hineingehen; abends Riesenrad Cosmo Clock 17 für Skyline‑Fotos."
+  },
+  {
+    "day": 16,
+    "date": null,
+    "title": "Yokohama",
+    "highlights": "70. Geburtstag",
+    "km": "",
+    "time": "",
+    "hotel": "Hilton Yokohama – https://www3.hilton.com/en/hotels/japan/hilton-yokohama-YOKAHHI/index.html",
+    "notes": "",
+    "helpfulInfo": "Private Teezeremonie im Sankeien‑Garten (¥3 000/Stunde) und Sonnenuntergangs‑Bootsfahrt ab Osanbashi‑Pier buchen."
+  },
+  {
+    "day": 17,
+    "date": null,
+    "title": "Yokohama → Tokio",
+    "highlights": "Freier Tag",
+    "km": "",
+    "time": "",
+    "hotel": "Hilton Tokyo – Shinjuku – https://www3.hilton.com/en/hotels/japan/hilton-tokyo-HNDJHGI/index.html",
+    "notes": "",
+    "helpfulInfo": "24‑Stunden‑Metro‑Ticket (¥600) nutzen; teamLab Borderless in Azabudai Hills (seit 2024) besuchen."
+  },
+  {
+    "day": 18,
+    "date": null,
+    "title": "Flug nach Hawaii",
+    "highlights": "Abschied von Japan",
+    "km": "",
+    "time": "",
+    "hotel": "",
+    "notes": "Flug buchen: Hawaiian Airlines – https://www.hawaiianairlines.com/",
+    "helpfulInfo": "Check‑in öffnet 3 h vorher; letzter Einkauf im Flughafen‑Muji."
+  }
+]

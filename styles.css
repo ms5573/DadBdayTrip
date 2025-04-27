@@ -197,116 +197,397 @@ section + section {
     transform: rotate(45deg);
 }
 
-/* Day Selector */
-.day-buttons {
+/* Option Controls */
+.option-controls {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-lg);
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--light-gray);
+    padding-bottom: 1rem;
 }
 
-.day-buttons button {
-    background-color: var(--light-gray);
-    border: none;
-    padding: var(--space-sm) var(--space-md);
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-weight: 500;
+.route-options, .language-options {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+/* Itinerary Options */
+.route-options .option-button {
+    background-color: var(--gofun);
     color: var(--kuro);
+    border: 2px solid var(--aka);
+    border-radius: 24px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.route-options .option-button::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background-color: var(--aka);
+    transition: all 0.3s ease;
+    z-index: -1;
+}
+
+.route-options .option-button:hover::before {
+    width: 100%;
+}
+
+.route-options .option-button:hover {
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.route-options .option-button.active {
+    background-color: var(--aka);
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Language Options */
+.language-options .lang-button {
+    background-color: var(--gofun);
+    color: var(--kuro);
+    border: 1px solid var(--medium-gray);
+    border-radius: 18px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
 }
 
-.day-buttons button:hover {
-    background-color: var(--medium-gray);
+.language-options .lang-button:hover {
+    background-color: var(--light-gray);
+    border-color: var(--kuro);
 }
 
-.day-buttons button.active {
+.language-options .lang-button.active {
+    background-color: var(--kuro);
+    color: white;
+    border-color: var(--kuro);
+}
+
+/* Day Selector */
+.day-selector {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--aka) var(--light-gray);
+}
+
+.day-selector::-webkit-scrollbar {
+    height: 6px;
+}
+
+.day-selector::-webkit-scrollbar-track {
+    background: var(--light-gray);
+    border-radius: 10px;
+}
+
+.day-selector::-webkit-scrollbar-thumb {
+    background-color: var(--aka);
+    border-radius: 10px;
+}
+
+.day-selector .day-button {
+    flex: 0 0 auto;
+    min-width: 80px;
+    background-color: var(--gofun);
+    color: var(--kuro);
+    border: 1px solid var(--medium-gray);
+    border-radius: 20px;
+    padding: 0.6rem 1rem;
+    margin: 0 0.4rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.day-selector .day-button:first-child {
+    margin-left: 0;
+}
+
+.day-selector .day-button:hover {
+    background-color: var(--light-gray);
+    border-color: var(--kuro);
+    transform: translateY(-2px);
+}
+
+.day-selector .day-button.active {
     background-color: var(--aka);
     color: white;
+    border-color: var(--aka);
+    box-shadow: 0 2px 8px rgba(216, 44, 44, 0.4);
 }
 
 /* Day Cards */
 .day-card {
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: var(--space-lg);
-    margin-bottom: var(--space-lg);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-}
-
-.day-card h3 {
-    border-bottom: 2px solid var(--aka);
-    padding-bottom: var(--space-sm);
-    margin-top: 0;
-    margin-bottom: var(--space-sm);
-}
-
-.day-card h4 {
-    margin-top: 0;
-    margin-bottom: var(--space-md);
-    color: var(--akane);
-}
-
-/* Day Images Styling */
-.day-image {
-    margin-bottom: var(--space-lg);
-    max-width: 100%;
-    border-radius: 5px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
     overflow: hidden;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-}
-
-.day-image img {
-    width: 100%;
-    height: auto;
-    max-height: 400px;
-    object-fit: cover;
-    display: block;
-}
-
-/* Day Highlights Styling */
-.day-highlights {
-    background-color: var(--light-gray);
-    border-radius: 5px;
-    padding: var(--space-md);
-    margin: var(--space-md) 0;
     border-left: 4px solid var(--aka);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.day-highlights h5 {
-    margin-top: 0;
-    color: var(--akane);
-    margin-bottom: var(--space-sm);
+.day-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.day-highlights ul {
-    margin-left: var(--space-lg);
-    padding-left: 0;
+.day-header {
+    background-color: #f9f9f9;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.day-highlights li {
-    margin-bottom: var(--space-xs);
+.day-header-left {
+    flex: 1;
 }
 
-.activity {
-    margin-bottom: var(--space-md);
-    padding-bottom: var(--space-md);
-    border-bottom: 1px dashed var(--medium-gray);
+.day-header-right {
+    display: flex;
+    gap: 12px;
+    color: #666;
+    font-size: 0.9rem;
 }
 
-.activity:last-child {
-    border-bottom: none;
+.travel-stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #f0f0f0;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.travel-icon {
+    font-style: normal;
+    font-size: 0.9rem;
+}
+
+.day-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--kuro);
+    font-weight: 600;
+}
+
+.day-title {
+    margin: 5px 0 0 0;
+    font-size: 1.1rem;
+    color: var(--aka);
+    font-weight: 500;
+}
+
+.day-content {
+    padding: 20px;
+}
+
+.day-details {
+    color: #333;
+}
+
+.notes {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+/* Helpful Info Section */
+.helpful-info-section {
+    background-color: #f8f9fa;
+    border-left: 3px solid #a3d7ff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 0 4px 4px 0;
+}
+
+.helpful-info-section h5 {
+    color: #2196F3;
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.helpful-info-section h5::before {
+    content: "💡";
+    margin-right: 8px;
+}
+
+.helpful-info-section p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Collapsible Sections */
+.collapsible-section {
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.collapsible-trigger {
+    padding: 12px 15px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.collapsible-trigger h5 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.collapsible-trigger:hover {
+    background-color: #f0f0f0;
+}
+
+.toggle-icon {
+    font-size: 1.2rem;
+    color: #666;
+    transition: transform 0.3s ease;
+}
+
+.collapsible-trigger.active .toggle-icon {
+    transform: rotate(45deg);
+}
+
+.collapsible-content {
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+/* Lists in collapsible sections */
+.highlights-list,
+.links-list {
+    list-style-type: none;
+    padding: 15px;
+    margin: 0;
+}
+
+.highlights-list li,
+.links-list li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5;
+}
+
+.highlights-list li:last-child,
+.links-list li:last-child {
     margin-bottom: 0;
-    padding-bottom: 0;
 }
 
-.activity-time {
-    font-weight: 700;
-    color: var(--akane);
+.highlights-list li::before {
+    content: "•";
+    color: var(--aka);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.links-list li::before {
+    content: "🔗";
+    position: absolute;
+    left: 0;
+}
+
+/* Hotel Info */
+.hotel-info {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fff8f8;
+    border-left: 3px solid var(--aka);
+    border-radius: 0 4px 4px 0;
+}
+
+.hotel-info h5 {
+    margin: 0 0 8px 0;
+    color: var(--aka);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.hotel-info h5::before {
+    content: "🏨";
+    margin-right: 8px;
+}
+
+.hotel-info p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    .day-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .day-header-right {
+        margin-top: 10px;
+    }
+    
+    .helpful-info-section,
+    .hotel-info {
+        padding: 12px;
+    }
+    
+    .collapsible-trigger {
+        padding: 10px 12px;
+    }
+    
+    .highlights-list,
+    .links-list {
+        padding: 12px;
+    }
+    
+    .day-card {
+        margin-bottom: 15px;
+        padding: 0;
+    }
+}
+
+@media (max-width: 480px) {    
+    .day-card {
+        margin-bottom: 10px;
+    }
 }
 
 /* Map section */
@@ -555,49 +836,6 @@ section + section {
     border-left: 4px solid var(--aka);
 }
 
-/* Collapsible sections */
-.collapsible-trigger {
-    background-color: var(--light-gray);
-    color: var(--kuro);
-    padding: var(--space-sm) var(--space-md);
-    width: 100%;
-    text-align: left;
-    border: none;
-    border-radius: 4px;
-    font-weight: 500;
-    position: relative;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: var(--space-sm);
-    margin-bottom: var(--space-sm);
-}
-
-.collapsible-trigger::after {
-    content: "+";
-    position: absolute;
-    right: var(--space-md);
-    font-size: 1.2rem;
-    font-weight: 700;
-}
-
-.collapsible-trigger.active::after {
-    content: "−";
-}
-
-.collapsible-trigger:hover {
-    background-color: var(--medium-gray);
-}
-
-.collapsible-content {
-    display: none;
-    padding: var(--space-md);
-    background-color: var(--gofun);
-    border-radius: 4px;
-    margin-top: var(--space-sm);
-    margin-bottom: var(--space-md);
-    border-left: 2px solid var(--medium-gray);
-}
-
 /* Footer */
 footer {
     background-color: var(--kuro);
@@ -744,51 +982,20 @@ footer {
     }
     
     /* Improved day selector */
-    .day-buttons {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: var(--space-sm);
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* IE and Edge */
-        gap: var(--space-xs);
-        position: sticky;
-        top: 60px;
-        background-color: white;
-        padding: var(--space-sm);
-        margin: calc(-1 * var(--space-md)) calc(-1 * var(--space-md)) var(--space-md);
-        border-radius: 0 0 8px 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        z-index: 10;
+    .day-selector {
+        padding: 0.5rem 0.25rem;
+        margin-bottom: 1.5rem;
     }
     
-    .day-buttons::-webkit-scrollbar {
-        display: none; /* Chrome, Safari, Opera */
+    .day-selector .day-button {
+        min-width: 70px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+        margin: 0 0.3rem;
     }
     
-    .day-buttons button {
-        flex: 0 0 auto;
-        padding: var(--space-xs) var(--space-sm);
-        font-size: 0.9rem;
-        min-width: auto;
-        border-radius: 15px;
-    }
-    
-    /* Day indicator for mobile */
-    .day-indicator {
-        display: none;
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: var(--aka);
-        color: white;
-        padding: var(--space-xs) var(--space-sm);
-        border-radius: 30px;
-        font-size: 0.9rem;
-        font-weight: bold;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        z-index: 100;
+    .day-content {
+        flex-direction: column;
     }
     
     /* Improved day cards for mobile */
@@ -843,6 +1050,22 @@ footer {
     #japan-trip-map {
         height: 100%;
     }
+
+    .option-controls {
+        flex-direction: column;
+        gap: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .route-options .option-button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .language-options .lang-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -862,10 +1085,16 @@ footer {
         font-size: 1.5rem;
     }
     
-    .day-buttons button {
-        padding: var(--space-xs) var(--space-sm);
+    .itinerary-options .option-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        margin: 0 0.4rem;
+    }
+    
+    .day-selector .day-button {
+        min-width: 60px;
+        padding: 0.4rem 0.6rem;
         font-size: 0.8rem;
-        min-width: 3.5rem;
     }
     
     .day-card {
@@ -1067,7 +1296,7 @@ nav {
 /* Sticky header adjustments */
 @media (max-width: 768px) {
     /* Fixed height for day buttons container */
-    .day-buttons {
+    .day-selector {
         height: 50px;
         z-index: 90;
     }
@@ -1075,7 +1304,7 @@ nav {
     /* Improve tap targets on mobile */
     .collapsible-trigger, 
     nav a,
-    .day-buttons button {
+    .day-selector .day-button {
         min-height: 44px;
     }
     
