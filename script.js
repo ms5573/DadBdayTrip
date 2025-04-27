@@ -1,7 +1,17 @@
 // Initialize the website functionality
 function initializeWebsite() {
     console.log('Robert\'s Japan Trip website loaded');
-    loadItineraryData();
+    
+    // Initialize data 
+    loadItineraryData().then(() => {
+        // After data is loaded, set up option buttons
+        setupItineraryOptions();
+        setupLanguageOptions();
+    }).catch(error => {
+        console.error('Error during initialization:', error);
+    });
+    
+    // Set up navigation and UI elements
     setupNavigation();
     setupMobileNav();
     setupSectionAnimations();
@@ -255,14 +265,15 @@ async function loadItineraryData() {
         
         renderItinerary(currentData);
         
-        // Set up the option toggle buttons
-        setupItineraryOptions();
-        setupLanguageOptions();
-        
         // Initialize map with the active option data
         initMap(currentData);
+        
+        // Return a resolved promise to indicate success
+        return Promise.resolve();
     } catch (error) {
         console.error('Error loading itinerary data:', error);
+        // Return a rejected promise to indicate failure
+        return Promise.reject(error);
     }
 }
 
@@ -315,6 +326,10 @@ function normalizeItineraryData(data) {
 function switchItineraryOption(option) {
     console.log('Switching to option:', option);
     if (option !== itineraryData.activeOption) {
+        // Store the previous option before updating
+        const previousOption = itineraryData.activeOption;
+        
+        // Update active option in our data store
         itineraryData.activeOption = option;
         
         // Get updated itinerary data with new option
@@ -331,10 +346,24 @@ function switchItineraryOption(option) {
             initMap(newData);
         }
         
-        // Update active button styles
+        // Update active button styles - first remove active class from all buttons
         document.querySelectorAll('.route-options .option-button').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.option === option);
+            btn.classList.remove('active');
         });
+        
+        // Then add active class to the selected option button
+        const activeButton = document.querySelector(`.route-options .option-button[data-option="${option}"]`);
+        if (activeButton) {
+            activeButton.classList.add('active');
+            console.log(`Activated button for option: ${option}`);
+        } else {
+            console.warn(`Could not find button for option: ${option}`);
+        }
+        
+        // Log the change for debugging
+        console.log(`Switched from ${previousOption} to ${option}`);
+    } else {
+        console.log(`Option ${option} is already active`);
     }
 }
 
@@ -363,16 +392,42 @@ function setupItineraryOptions() {
     console.log('Setting up itinerary options');
     const optionButtons = document.querySelectorAll('.route-options .option-button');
     
+    // First, remove any active classes that might be there
     optionButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            console.log('Option button clicked:', this.dataset.option);
-            const option = this.dataset.option;
-            switchItineraryOption(option);
-        });
-        
-        // Set initial active state
-        button.classList.toggle('active', button.dataset.option === itineraryData.activeOption);
+        button.classList.remove('active');
     });
+    
+    // Set active button based on current data
+    const activeButton = document.querySelector(`.route-options .option-button[data-option="${itineraryData.activeOption}"]`);
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
+    
+    // Setup click handlers
+    optionButtons.forEach(button => {
+        // Remove any existing click listeners to avoid duplicates
+        button.removeEventListener('click', handleOptionButtonClick);
+        
+        // Add new click listener
+        button.addEventListener('click', handleOptionButtonClick);
+    });
+}
+
+// Handler for option button clicks
+function handleOptionButtonClick() {
+    console.log('Option button clicked:', this.dataset.option);
+    
+    // Remove active class from all buttons first
+    document.querySelectorAll('.route-options .option-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to the clicked button
+    this.classList.add('active');
+    
+    // Switch itinerary data
+    const option = this.dataset.option;
+    switchItineraryOption(option);
 }
 
 // Setup language options
