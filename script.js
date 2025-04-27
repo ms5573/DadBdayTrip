@@ -392,6 +392,20 @@ function setupLanguageOptions() {
     });
 }
 
+// Convert text with format "Label – URL" into clickable links
+function convertToClickableLinks(text) {
+    if (!text) return '';
+    
+    // Match pattern: Text – https://url.com
+    // This regex looks for text followed by a dash/hyphen, then a URL
+    const linkPattern = /(.+?)(\s+[-–—]\s+)(https?:\/\/[^\s]+)/g;
+    
+    return text.replace(linkPattern, (match, label, separator, url) => {
+        // Return the label wrapped in an anchor tag
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+    });
+}
+
 // Render the itinerary from the data
 function renderItinerary(data) {
     const itinerarySection = document.querySelector('.itinerary-content');
@@ -425,9 +439,18 @@ function renderItinerary(data) {
         dayCard.dataset.day = day.day;
         dayCard.style.display = index === 0 ? 'block' : 'none';
         
-        // Ensure highlights is an array
-        const highlights = Array.isArray(day.highlights) ? day.highlights : 
-                          (typeof day.highlights === 'string' ? day.highlights.split(';').map(h => h.trim()) : []);
+        // Ensure highlights is an array and process for clickable links
+        const highlights = Array.isArray(day.highlights) ? day.highlights.map(highlight => convertToClickableLinks(highlight)) : 
+                          (typeof day.highlights === 'string' ? day.highlights.split(';').map(h => convertToClickableLinks(h.trim())) : []);
+        
+        // Process notes and helpfulInfo for clickable links
+        const notes = day.notes ? convertToClickableLinks(day.notes) : '';
+        const helpfulInfo = day.helpfulInfo ? convertToClickableLinks(day.helpfulInfo) : '';
+        const hotel = day.hotel ? convertToClickableLinks(day.hotel) : '';
+        
+        // Process helpfulLinks for clickable links
+        const helpfulLinks = day.helpfulLinks && day.helpfulLinks.length ? 
+                             day.helpfulLinks.map(link => convertToClickableLinks(link)) : [];
         
         // Card content with improved design
         dayCard.innerHTML = `
@@ -443,12 +466,12 @@ function renderItinerary(data) {
             </div>
             <div class="day-content">
                 <div class="day-details">
-                    ${day.notes ? `<p class="notes">${day.notes}</p>` : ''}
+                    ${notes ? `<p class="notes">${notes}</p>` : ''}
                     
-                    ${day.helpfulInfo ? `
+                    ${helpfulInfo ? `
                     <div class="helpful-info-section">
                         <h5>Helpful Tips</h5>
-                        <p>${day.helpfulInfo}</p>
+                        <p>${helpfulInfo}</p>
                     </div>
                     ` : ''}
                     
@@ -464,7 +487,7 @@ function renderItinerary(data) {
                         </div>
                     </div>
                     
-                    ${day.helpfulLinks && day.helpfulLinks.length ? `
+                    ${helpfulLinks.length ? `
                     <div class="collapsible-section">
                         <div class="collapsible-trigger">
                             <h5>Helpful Links</h5>
@@ -472,16 +495,16 @@ function renderItinerary(data) {
                         </div>
                         <div class="collapsible-content">
                             <ul class="links-list">
-                                ${day.helpfulLinks.map(link => `<li>${link}</li>`).join('')}
+                                ${helpfulLinks.map(link => `<li>${link}</li>`).join('')}
                             </ul>
                         </div>
                     </div>
                     ` : ''}
                     
-                    ${day.hotel ? `
+                    ${hotel ? `
                     <div class="hotel-info">
                         <h5>Accommodation</h5>
-                        <p>${day.hotel}</p>
+                        <p>${hotel}</p>
                     </div>
                     ` : ''}
                 </div>
